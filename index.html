@@ -377,7 +377,7 @@
   .type-clock-orbit { fill: none; stroke: rgba(255,255,255,.12); stroke-width: 2; stroke-dasharray: 4 14; animation: svg-dash 5s linear infinite; }
   .type-clock-inner { fill: none; stroke: rgba(0,169,214,.22); stroke-width: 2; stroke-dasharray: 2 12; animation: svg-dash 3.8s linear infinite reverse; }
   .type-clock-face { fill: #07131a; stroke: #00a9d6; stroke-width: 3; animation: svg-pulse 1.8s var(--ease-soft) infinite; }
-  .type-clock-hand { stroke: #65d8f2; stroke-width: 5; stroke-linecap: round; transform-box: view-box; transform-origin: 110px 75px; animation: svg-metronome 1.8s var(--ease-soft) infinite; }
+  .type-clock-hand { stroke: #65d8f2; stroke-width: 5; stroke-linecap: round; }
   .type-clock-cap { fill: #65d8f2; animation: svg-pulse 1.8s var(--ease-soft) infinite; }
 
   .data-wrap { width: 100%; max-width: 100%; min-width: 0; display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr); gap: clamp(24px, 3vw, 56px); align-items: center; }
@@ -441,7 +441,7 @@
   .control-center-disc { fill: #07131a; stroke: #00a9d6; stroke-width: 3; animation: svg-pulse 1.8s var(--ease-soft) infinite; }
   .control-center-text { fill: #f7f7f4; font: 700 20px var(--mono); letter-spacing: .12em; text-anchor: middle; }
   .control-center-sub { fill: #8fa0aa; font: 600 10px var(--mono); letter-spacing: .15em; text-anchor: middle; }
-  .control-hand { stroke: #65d8f2; stroke-width: 5; stroke-linecap: round; transform-box: view-box; transform-origin: 310px 220px; animation: svg-metronome 1.8s var(--ease-soft) infinite; }
+  .control-hand { stroke: #65d8f2; stroke-width: 5; stroke-linecap: round; }
   .control-hand-cap { fill: #65d8f2; animation: svg-pulse 1.8s var(--ease-soft) infinite; }
   .control-node rect { fill: #0d1015; stroke: rgba(255,255,255,.24); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: node-sequence 3.6s var(--ease-soft) infinite; }
   .control-node text { fill: #f7f7f4; font: 700 14px var(--mono); letter-spacing: .08em; text-anchor: middle; dominant-baseline: middle; }
@@ -616,8 +616,6 @@
   .addr-scan { animation: addr-scan 3s linear infinite; }
   @keyframes addr-scan { 0% { opacity:.25; } 12% { opacity:1; } 30% { opacity:.25; } 100% { opacity:.25; } }
   .addr-cell.hit { animation: address-pulse 3.6s var(--ease-soft) infinite; }
-  .clock-sweep { transform-box: view-box; transform-origin: 110px 75px; animation: clock-sweep 3s linear infinite; }
-  @keyframes clock-sweep { to { transform: rotate(360deg); } }
   .clock-ping { transform-box: fill-box; transform-origin: center; animation: clock-ping 3s var(--ease-soft) infinite; }
   @keyframes clock-ping { 0%,100% { opacity:.5; transform:scale(.9);} 50% { opacity:1; transform:scale(1.1);} }
   .data-pkt { animation: svg-pulse 2s var(--ease-soft) infinite; }
@@ -633,26 +631,44 @@
   .duo-stack { width:100%; max-width:100%; min-width:0; display:grid; grid-template-rows:auto auto; gap:14px; align-content:center; }
   .trio-dock { width:100%; max-width:100%; min-width:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
   .center-stage { width:100%; max-width:100%; min-width:0; display:grid; justify-items:center; text-align:center; gap:12px; }
-  @media (max-width: 860px) { .trio-dock { grid-template-columns:1fr; } .inspector { top:auto; bottom:70px; right:12px; left:12px; width:auto; transform:translateY(16px); } .slide.is-active .inspector.show { transform:translateY(0); } }
+  @media (max-width: 860px) { .trio-dock { grid-template-columns:1fr; } .inspector { width:min(340px,88vw); padding:24px 20px 20px; } }
 
-  /* ===== INSPECTOR: click a hotspot -> blur rest + concept card on top ===== */
-  .inspector { position: absolute; z-index: 8; top: 50%; right: clamp(8px, 2vw, 28px); width: min(340px, 32vw); transform: translateY(-50%) translateX(24px) scale(.96); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s var(--ease-soft), transform .55s var(--ease-out), visibility 0s linear .45s; background: #0d1015; border: 1px solid rgba(0,169,214,.5); border-radius: 16px; padding: 22px 20px; color: #f7f7f4; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
-  .slide.is-active .focus-group.has-focus ~ .inspector, .slide.is-active .inspector.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(-50%) translateX(0) scale(1); transition-delay: 0s; }
-  .inspector.on-light { background: #0d1015; color: #f7f7f4; }
-  .inspector-kicker { font: 700 10px/1 var(--mono); letter-spacing: .16em; color: var(--cyan-light); text-transform: uppercase; }
-  .inspector h4 { margin: 10px 0 0; font-size: 24px; letter-spacing: -.02em; }
-  .inspector p { margin: 10px 0 0; font-size: 15px; line-height: 1.5; color: #c6ccd1; }
-  .inspector-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.14); font: 600 11px/1.6 var(--mono); letter-spacing: .08em; color: #8fa0aa; text-transform: uppercase; }
-  .inspector-close { position: absolute; top: 8px; right: 10px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: transparent; color: #fff; font-size: 16px; cursor: pointer; line-height: 1; }
+  /* ===== INSPECTOR v2: modal central + veu que desfoca TUDO ===== */
+  .slide .veil { position: absolute; inset: 0; z-index: 8; background: transparent; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s var(--ease-soft), visibility 0s linear .45s; }
+  .slide.inspecting .veil { opacity: 1; visibility: visible; pointer-events: auto; transition-delay: 0s; }
+  .scene, .topline, .bottomline, .content { transition: filter .5s var(--ease-soft), opacity .5s var(--ease-soft); }
+  /* desfoca TUDO menos o hotspot focado e a cadeia de ancestrais dele */
+  .slide.inspecting .scene,
+  .slide.inspecting .topline,
+  .slide.inspecting .bottomline { filter: blur(9px) brightness(.7) !important; opacity: .4 !important; }
+  .slide.inspecting .content *:not(.inspector):not(.inspector *):not(.is-focused):not(:has(.is-focused)) {
+    filter: blur(7px) brightness(.72) saturate(.75) !important;
+    opacity: .38 !important;
+  }
+  .slide.inspecting .content .is-focused {
+    filter: none !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 7;
+    animation-play-state: paused !important;
+  }
+  .slide.inspecting .content { z-index: 10; }
+  .inspector { position: absolute; z-index: 9; left: 50%; top: 50%; width: min(400px, 86vw); transform: translate(-50%,-46%) scale(.92); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .4s var(--ease-soft), transform .55s var(--ease-out), visibility 0s linear .4s; background: #0d1015; border: 1px solid rgba(0,169,214,.55); border-radius: 20px; padding: 30px 28px 24px; color: #f7f7f4; box-shadow: 0 40px 110px rgba(0,0,0,.6), 0 0 0 1px rgba(101,216,242,.12), 0 0 60px rgba(0,169,214,.18); text-align: left; }
+  .inspector.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%,-50%) scale(1); transition-delay: 0s; }
+  .inspector-kicker { display: inline-block; padding: 6px 12px; border: 1px solid rgba(0,169,214,.5); border-radius: 999px; font: 700 10px/1 var(--mono); letter-spacing: .18em; color: var(--cyan-light); text-transform: uppercase; background: rgba(0,169,214,.1); }
+  .inspector h4 { margin: 16px 0 0; font-size: clamp(28px, 3vw, 38px); letter-spacing: -.025em; }
+  .inspector h4 .thin { color: var(--cyan-light); }
+  .inspector p { margin: 12px 0 0; font-size: 16px; line-height: 1.55; color: #c6ccd1; }
+  .inspector-meta { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.14); font: 600 11px/1.6 var(--mono); letter-spacing: .1em; color: #8fa0aa; text-transform: uppercase; }
+  .inspector-close { position: absolute; top: 12px; right: 12px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.06); color: #fff; font-size: 17px; cursor: pointer; line-height: 1; transition: background .25s, transform .25s; }
+  .inspector-close:hover { background: rgba(189,23,70,.5); transform: rotate(90deg); }
   .hotspot { cursor: pointer; }
   .hotspot:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
-  .focus-group.has-focus .hotspot { filter: blur(5px) brightness(.65) saturate(.7) !important; opacity: .38 !important; }
-  .focus-group.has-focus .hotspot.is-focused { filter: none !important; opacity: 1 !important; }
 
   /* ===== FOCUS MODE: click to isolate one element ===== */
   .focus-group { transition: filter .45s var(--ease-soft); }
   /* blur/opacity only — never transform (entrance keyframes own transform) */
-  .focus-group.has-focus .focusable { filter: blur(6px) brightness(.7) saturate(.7) !important; opacity: .4 !important; }
+  .focus-group.has-focus .focusable:not(.is-focused):not(:has(.is-focused)) { filter: blur(6px) brightness(.7) saturate(.7) !important; opacity: .4 !important; }
   .focus-group.has-focus .focusable.is-focused { filter: none !important; opacity: 1 !important; box-shadow: 0 18px 60px rgba(0,169,214,.30); z-index: 5; }
   .focusable { cursor: pointer; transition: filter .45s var(--ease-soft), opacity .45s, box-shadow .45s; border-radius: 12px; }
   .focusable:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
@@ -782,6 +798,7 @@
   <section class="slide is-active" data-theme="dark" data-transition="rise" aria-label="Capa">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="depth-haze ruby"></div>
       <div class="frame-line"></div>
@@ -818,6 +835,7 @@
   <section class="slide" data-theme="light" data-transition="iris" aria-label="Conceito e função">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="frame-line"></div>
     </div>
@@ -826,7 +844,7 @@
       <div class="section-page entrance fade-up delay-1">02 / 10</div>
     </div>
     <div class="content">
-      <div class="concept-grid">
+      <div class="concept-grid focus-group">
         <div class="concept-copy">
           <h2 class="entrance fade-up delay-1">Vias que <span class="accent-ruby">conectam</span> o sistema</h2>
           <p class="entrance fade-up delay-2">CPU, memória e periféricos precisam trocar informação.</p>
@@ -841,6 +859,7 @@
   <section class="slide" data-theme="graphite" data-transition="sweep" aria-label="Tipos de barramento">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="frame-line"></div>
     </div>
@@ -894,7 +913,7 @@
               <circle class="type-clock-orbit svg-entrance-draw delay-1" cx="110" cy="75" r="58" style="stroke-dasharray: 364; stroke-dashoffset: 364;" />
               <circle class="type-clock-inner svg-entrance-draw delay-2" cx="110" cy="75" r="48" style="stroke-dasharray: 301; stroke-dashoffset: 301;" />
               <circle class="type-clock-face clock-ping" style="animation-delay:-1.5s" cx="110" cy="75" r="38" />
-              <line class="type-clock-hand clock-sweep" x1="110" y1="75" x2="110" y2="40" />
+              <g><animateTransform attributeName="transform" type="rotate" from="0 110 75" to="360 110 75" dur="3s" repeatCount="indefinite" /><line class="type-clock-hand" x1="110" y1="75" x2="110" y2="40" /></g>
               <circle class="type-clock-cap clock-ping" cx="110" cy="75" r="5" />
             </svg>
             <div class="type-index entrance fade delay-4">03</div>
@@ -911,6 +930,7 @@
   <section class="slide" data-theme="light" data-transition="depth" aria-label="Barramento de dados">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze ruby"></div>
       <div class="frame-line"></div>
     </div>
@@ -959,6 +979,7 @@
   <section class="slide" data-theme="light" data-transition="sweep" aria-label="Barramento de endereços">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="frame-line"></div>
     </div>
@@ -987,6 +1008,7 @@
   <section class="slide" data-theme="dark" data-transition="fold" aria-label="Barramento de controle">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="depth-haze ruby"></div>
       <div class="frame-line"></div>
@@ -1011,7 +1033,7 @@
           </div>
         </div>
         <div class="band-stage control-demo entrance scale delay-4" aria-hidden="true">
-          <svg class="control-svg" viewBox="0 0 620 400" role="img" aria-label="Clock central coordenando os sinais"><circle class="control-orbit-svg" cx="310" cy="200" r="118" /><circle class="control-orbit-svg inner" cx="310" cy="200" r="86" /><path class="control-track" d="M310 128 L310 78" /><path class="control-track" d="M392 200 L462 200" /><path class="control-track" d="M310 272 L310 322" /><path class="control-track ruby" d="M228 200 L158 200" /><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" repeatCount="indefinite" path="M310,128 L310,78" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite" path="M462,200 L392,200" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-2s" repeatCount="indefinite" path="M310,322 L310,272" /></circle><circle class="signal-mover" r="6" fill="#f05b7c"><animateMotion dur="2.6s" begin="-.65s" repeatCount="indefinite" path="M158,200 L228,200" /></circle><g class="control-node hotspot" data-key="rw" tabindex="0"><rect x="215" y="14" width="190" height="56" rx="6" /><text x="310" y="38">READ / WRITE</text><text class="sub" x="310" y="58">TIPO DE OPERACAO</text></g><g class="control-node irq hotspot" data-key="irq" tabindex="0"><rect x="472" y="172" width="132" height="56" rx="6" /><text x="538" y="196">IRQ</text><text class="sub" x="538" y="216">INTERRUPCAO</text></g><g class="control-node hotspot" data-key="grant" tabindex="0"><rect x="215" y="330" width="190" height="56" rx="6" /><text x="310" y="354">BUS GRANT</text><text class="sub" x="310" y="374">ACESSO CONCEDIDO</text></g><g class="control-node hotspot" data-key="req" tabindex="0"><rect x="16" y="172" width="132" height="56" rx="6" /><text x="82" y="196">BUS REQ</text><text class="sub" x="82" y="216">SOLICITACAO</text></g><circle class="control-center-disc" cx="310" cy="200" r="62" /><line class="control-hand" x1="310" y1="200" x2="310" y2="156" /><circle class="control-hand-cap" cx="310" cy="200" r="6" /><text class="control-center-text hotspot" data-key="clk" tabindex="0" x="310" y="228">CLOCK</text><text class="control-center-sub" x="310" y="248">RITMO</text></svg>
+          <svg class="control-svg" viewBox="0 0 620 400" role="img" aria-label="Clock central coordenando os sinais"><circle class="control-orbit-svg" cx="310" cy="200" r="118" /><circle class="control-orbit-svg inner" cx="310" cy="200" r="86" /><path class="control-track" d="M310 128 L310 78" /><path class="control-track" d="M392 200 L462 200" /><path class="control-track" d="M310 272 L310 322" /><path class="control-track ruby" d="M228 200 L158 200" /><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" repeatCount="indefinite" path="M310,128 L310,78" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite" path="M462,200 L392,200" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-2s" repeatCount="indefinite" path="M310,322 L310,272" /></circle><circle class="signal-mover" r="6" fill="#f05b7c"><animateMotion dur="2.6s" begin="-.65s" repeatCount="indefinite" path="M158,200 L228,200" /></circle><g class="control-node hotspot" data-key="rw" tabindex="0"><rect x="215" y="14" width="190" height="56" rx="6" /><text x="310" y="38">READ / WRITE</text><text class="sub" x="310" y="58">TIPO DE OPERACAO</text></g><g class="control-node irq hotspot" data-key="irq" tabindex="0"><rect x="472" y="172" width="132" height="56" rx="6" /><text x="538" y="196">IRQ</text><text class="sub" x="538" y="216">INTERRUPCAO</text></g><g class="control-node hotspot" data-key="grant" tabindex="0"><rect x="215" y="330" width="190" height="56" rx="6" /><text x="310" y="354">BUS GRANT</text><text class="sub" x="310" y="374">ACESSO CONCEDIDO</text></g><g class="control-node hotspot" data-key="req" tabindex="0"><rect x="16" y="172" width="132" height="56" rx="6" /><text x="82" y="196">BUS REQ</text><text class="sub" x="82" y="216">SOLICITACAO</text></g><circle class="control-center-disc" cx="310" cy="200" r="62" /><g><animateTransform attributeName="transform" type="rotate" from="0 310 200" to="360 310 200" dur="2.4s" repeatCount="indefinite" /><line class="control-hand" x1="310" y1="200" x2="310" y2="156" /></g><circle class="control-hand-cap" cx="310" cy="200" r="6" /><text class="control-center-text hotspot" data-key="clk" tabindex="0" x="310" y="228">CLOCK</text><text class="control-center-sub" x="310" y="248">RITMO</text></svg>
         </div>
       </div>
       <aside class="inspector" id="insp-control" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Controle</div><h4>Sinal</h4><p>Escolha um bloco do diagrama.</p><div class="inspector-meta">clock · arbitragem</div></aside>
@@ -1022,6 +1044,7 @@
   <section class="slide" data-theme="light" data-transition="split" aria-label="Barramento interno e externo">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="frame-line"></div>
     </div>
@@ -1030,7 +1053,7 @@
       <div class="section-page entrance fade-up delay-1">07 / 10</div>
     </div>
     <div class="content">
-      <div class="race-wrap">
+      <div class="race-wrap focus-group">
         <div class="race-head">
           <div>
             
@@ -1039,7 +1062,7 @@
           <div class="race-score entrance scale delay-3"><span>VELOCIDADE</span><strong>INT 10 x 2 EXT</strong></div>
         </div>
         <div class="race-grid focus-group entrance scale delay-3">
-          <button class="race-lane focusable is-focused hotspot" data-key="int" aria-label="Focar barramento interno">
+          <button class="race-lane focusable hotspot" data-key="int" aria-label="Focar barramento interno">
             <span class="race-tag cyan">INTERNO</span>
             <span class="race-track"><i class="race-car cyan c1"></i><i class="race-car cyan c2"></i></span>
             <span class="race-meta"><b>FSB · QPI/UPI · Infinity Fabric</b><i>mm de cobre · TB/s · núcleo ↔ cache</i></span>
@@ -1060,6 +1083,7 @@
   <section class="slide" data-theme="dark" data-transition="zoom" aria-label="Síntese">
     <div class="scene" aria-hidden="true">
       <div class="depth-plane"></div>
+    <div class="veil" aria-hidden="true"></div>
       <div class="depth-haze"></div>
       <div class="depth-haze ruby"></div>
       <div class="frame-line"></div>
@@ -1122,7 +1146,7 @@
   let current = 0;
   let locked = false;
 
-  function showSlide(index) {
+  let showSlide = function(index) {
     const next = Math.max(0, Math.min(slides.length - 1, index));
     if (next === current || locked) return;
     locked = true;
@@ -1188,50 +1212,53 @@
   }
   function closeInspectors(slide) {
     slide.querySelectorAll(".inspector").forEach(x => x.classList.remove("show"));
-    const g = slide.querySelector(".focus-group");
-    if (g) g.classList.remove("has-focus");
+    slide.classList.remove("inspecting");
+    slide.querySelectorAll(".focus-group").forEach(g => g.classList.remove("has-focus"));
     slide.querySelectorAll(".is-focused").forEach(x => x.classList.remove("is-focused"));
   }
   document.querySelectorAll(".slide").forEach(slide => {
-    const group = slide.querySelector(".focus-group");
     slide.addEventListener("click", ev => {
       if (ev.target.closest(".inspector-close")) { closeInspectors(slide); return; }
-      const hot = ev.target.closest(".hotspot");
-      if (!hot || !group || !group.contains(hot)) {
+      const hot = ev.target.closest(".hotspot, .focusable");
+      const group = hot ? (hot.closest(".focus-group") || hot.parentElement) : null;
+      if (!hot || !group) {
         if (!ev.target.closest(".inspector")) closeInspectors(slide);
         return;
       }
       ev.stopPropagation();
       const was = hot.classList.contains("is-focused");
-      group.querySelectorAll(".is-focused").forEach(x => x.classList.remove("is-focused"));
-      slide.querySelectorAll(".hotspot.is-focused").forEach(x => { if (!group.contains(x)) x.classList.remove("is-focused"); });
+      slide.querySelectorAll(".is-focused").forEach(x => x.classList.remove("is-focused"));
       if (was) { closeInspectors(slide); }
       else {
         group.classList.add("has-focus");
         hot.classList.add("is-focused");
-        openInspector(slide, hot.dataset.key);
+        if (hot.dataset.key && slide.querySelector(".inspector")) {
+          slide.classList.add("inspecting");
+          openInspector(slide, hot.dataset.key);
+        }
       }
     });
   });
+  document.querySelectorAll(".slide .veil").forEach(v => {
+    v.addEventListener("click", ev => { ev.stopPropagation(); closeInspectors(v.closest(".slide")); });
+  });
+  document.addEventListener("keydown", ev => {
+    if (ev.key === "Escape") document.querySelectorAll(".slide.inspecting").forEach(closeInspectors);
+  });
+  const _show = showSlide;
+  showSlide = function(i) {
+    document.querySelectorAll(".slide.inspecting").forEach(closeInspectors);
+    return _show(i);
+  };
   // varied compositions: slide 3 cards + slide 7 lanes get focusable behavior (before listeners!)
   document.querySelectorAll('.types-grid').forEach(g => g.classList.add('focus-group'));
   document.querySelectorAll('.type-card').forEach(c => { c.classList.add('focusable'); c.setAttribute('tabindex','0'); });
   document.querySelectorAll('.gloss-card, .race-lane').forEach(c => c.setAttribute('tabindex','0'));
-  // Click-to-focus: blur siblings, isolate clicked card/lane
-  document.querySelectorAll('.focus-group').forEach(group => {
-    group.addEventListener('click', ev => {
-      const card = ev.target.closest('.focusable');
-      if(!card) { group.classList.remove('has-focus'); group.querySelectorAll('.is-focused').forEach(x => x.classList.remove('is-focused')); return; }
-      const was = card.classList.contains('is-focused');
-      group.querySelectorAll('.is-focused').forEach(x => x.classList.remove('is-focused'));
-      if(was) { group.classList.remove('has-focus'); }
-      else { group.classList.add('has-focus'); card.classList.add('is-focused'); }
-    });
-  });
+
   // keyboard: Enter/Space on a focused card toggles focus too
   document.addEventListener('keydown', ev => {
-    if((ev.key === 'Enter' || ev.key === ' ') && ev.target.classList && ev.target.classList.contains('focusable')) {
-      ev.preventDefault(); ev.target.click();
+    if((ev.key === 'Enter' || ev.key === ' ') && ev.target.classList && (ev.target.classList.contains('focusable') || ev.target.classList.contains('hotspot'))) {
+      ev.preventDefault(); ev.target.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     }
   });
   function fromHash() {
@@ -1240,6 +1267,10 @@
   }
 
   document.addEventListener('keydown', event => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key) &&
+        event.target.classList && (event.target.classList.contains('focusable') || event.target.classList.contains('hotspot'))) {
+      return; // focado em hotspot: o handler Enter/Space cuida do clique
+    }
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) {
       event.preventDefault();
       showSlide(current + 1);
