@@ -487,6 +487,109 @@
   @keyframes bridge-travel { from { top: 10%; opacity: 0; } 12%,88% { opacity: 1; } to { top: 88%; opacity: 0; } }
   @keyframes bridge-travel-reverse { from { top: 88%; opacity: 0; } 12%,88% { opacity: 1; } to { top: 10%; opacity: 0; } }
 
+  /* ===== ENTRANCE ANIMATIONS (staggered, run once on slide activation) ===== */
+  @keyframes entrance-fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes entrance-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes entrance-scale {
+    from { opacity: 0; transform: scale(.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes entrance-slide-left {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes entrance-slide-right {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes entrance-rotate-in {
+    from { opacity: 0; transform: rotate(-6deg) scale(.9); }
+    to   { opacity: 1; transform: rotate(0) scale(1); }
+  }
+
+  .slide .entrance {
+    opacity: 0;
+    animation-fill-mode: forwards;
+    animation-timing-function: var(--ease-out);
+    animation-duration: 600ms;
+  }
+
+  .slide.is-active .entrance {
+    animation-play-state: running;
+  }
+
+  /* Stagger delays */
+  .slide .entrance.delay-1  { animation-delay: 80ms; }
+  .slide .entrance.delay-2  { animation-delay: 160ms; }
+  .slide .entrance.delay-3  { animation-delay: 240ms; }
+  .slide .entrance.delay-4  { animation-delay: 320ms; }
+  .slide .entrance.delay-5  { animation-delay: 400ms; }
+  .slide .entrance.delay-6  { animation-delay: 480ms; }
+  .slide .entrance.delay-7  { animation-delay: 560ms; }
+  .slide .entrance.delay-8  { animation-delay: 640ms; }
+
+  /* Entrance variants */
+  .entrance.fade-up     { animation-name: entrance-fade-up; }
+  .entrance.fade        { animation-name: entrance-fade; }
+  .entrance.scale       { animation-name: entrance-scale; }
+  .entrance.slide-left  { animation-name: entrance-slide-left; }
+  .entrance.slide-right { animation-name: entrance-slide-right; }
+  .entrance.rotate-in   { animation-name: entrance-rotate-in; }
+
+  /* SVG entrance (for elements inside SVGs) */
+  @keyframes svg-entrance-draw {
+    from { stroke-dashoffset: 1000; opacity: 0; }
+    to   { stroke-dashoffset: 0; opacity: 1; }
+  }
+  @keyframes svg-entrance-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes svg-entrance-scale {
+    from { opacity: 0; transform: scale(.8); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .slide .svg-entrance-draw {
+    opacity: 0;
+    animation: svg-entrance-draw 800ms var(--ease-out) forwards;
+    animation-play-state: paused;
+  }
+  .slide .svg-entrance-fade {
+    opacity: 0;
+    animation: svg-entrance-fade 500ms var(--ease-out) forwards;
+    animation-play-state: paused;
+  }
+  .slide .svg-entrance-scale {
+    opacity: 0;
+    animation: svg-entrance-scale 600ms var(--ease-out) forwards;
+    animation-play-state: paused;
+  }
+
+  .slide.is-active .svg-entrance-draw,
+  .slide.is-active .svg-entrance-fade,
+  .slide.is-active .svg-entrance-scale {
+    animation-play-state: running;
+  }
+
+  /* Stagger for SVG entrances */
+  .slide .svg-entrance-draw.delay-1  { animation-delay: 100ms; }
+  .slide .svg-entrance-draw.delay-2  { animation-delay: 200ms; }
+  .slide .svg-entrance-draw.delay-3  { animation-delay: 300ms; }
+  .slide .svg-entrance-draw.delay-4  { animation-delay: 400ms; }
+  .slide .svg-entrance-fade.delay-1  { animation-delay: 100ms; }
+  .slide .svg-entrance-fade.delay-2  { animation-delay: 200ms; }
+  .slide .svg-entrance-fade.delay-3  { animation-delay: 300ms; }
+  .slide .svg-entrance-scale.delay-1 { animation-delay: 100ms; }
+  .slide .svg-entrance-scale.delay-2 { animation-delay: 200ms; }
+  .slide .svg-entrance-scale.delay-3 { animation-delay: 300ms; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: .01ms !important;
@@ -512,41 +615,41 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Arquitetura de computadores</div>
-      <div class="section-page">01 / 08</div>
+      <div class="section-code entrance fade-up">Arquitetura de computadores</div>
+      <div class="section-page entrance fade-up delay-1">01 / 08</div>
     </div>
     <div class="content">
       <div class="split-cover">
         <div class="cover-title">
-          <div class="eyebrow">Infraestrutura de comunicação</div>
-          <h1 style="margin-top:20px;">Barra<br><span class="accent-cyan">mentos</span></h1>
-          <p>A infraestrutura que conecta o computador.</p>
+          <div class="eyebrow entrance fade-up delay-1">Infraestrutura de comunicação</div>
+          <h1 style="margin-top:20px;" class="entrance fade-up delay-2">Barra<br><span class="accent-cyan">mentos</span></h1>
+          <p class="entrance fade-up delay-3">A infraestrutura que conecta o computador.</p>
         </div>
-        <div class="system-board" aria-hidden="true">
+        <div class="system-board entrance scale delay-4" aria-hidden="true">
           <svg viewBox="0 0 620 440" width="100%" height="100%" role="img" aria-label="CPU, memória e entrada e saída conectados pelo barramento">
-            <line class="system-wire base" x1="136" y1="220" x2="484" y2="220" />
-            <line class="system-wire flow" x1="136" y1="220" x2="484" y2="220" />
-            <circle r="8" fill="#65d8f2">
+            <line class="system-wire base svg-entrance-draw delay-1" x1="136" y1="220" x2="484" y2="220" style="stroke-dasharray: 348; stroke-dashoffset: 348;" />
+            <line class="system-wire flow svg-entrance-draw delay-2" x1="136" y1="220" x2="484" y2="220" style="stroke-dasharray: 348; stroke-dashoffset: 348;" />
+            <circle class="svg-entrance-scale delay-3" r="8" fill="#65d8f2">
               <animateMotion dur="4.2s" repeatCount="indefinite" path="M136,220 L484,220" />
             </circle>
-            <circle r="8" fill="#f05b7c">
+            <circle class="svg-entrance-scale delay-4" r="8" fill="#f05b7c">
               <animateMotion dur="4.2s" begin="-2.1s" repeatCount="indefinite" path="M484,220 L136,220" />
             </circle>
-            <g class="system-bus-label" transform="translate(250 306)">
+            <g class="system-bus-label svg-entrance-fade delay-5" transform="translate(250 306)">
               <rect width="120" height="36" rx="18" />
               <text x="60" y="18">BARRAMENTO</text>
             </g>
-            <g class="system-node cpu-node" transform="translate(78 220)">
+            <g class="system-node cpu-node svg-entrance-scale delay-6" transform="translate(78 220)">
               <rect x="-58" y="-58" width="116" height="116" rx="6" />
               <text x="0" y="2" text-anchor="middle">CPU</text>
               <text class="sub" x="0" y="26" text-anchor="middle">ORIGEM</text>
             </g>
-            <g class="system-node" transform="translate(310 220)">
+            <g class="system-node svg-entrance-scale delay-7" transform="translate(310 220)">
               <rect x="-58" y="-58" width="116" height="116" rx="6" />
               <text x="0" y="2" text-anchor="middle">MEM</text>
               <text class="sub" x="0" y="26" text-anchor="middle">DESTINO</text>
             </g>
-            <g class="system-node io-node" transform="translate(542 220)">
+            <g class="system-node io-node svg-entrance-scale delay-8" transform="translate(542 220)">
               <rect x="-58" y="-58" width="116" height="116" rx="6" />
               <text x="0" y="2" text-anchor="middle">I/O</text>
               <text class="sub" x="0" y="26" text-anchor="middle">PERIFÉRICOS</text>
@@ -565,53 +668,53 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Conceito e função</div>
-      <div class="section-page">02 / 08</div>
+      <div class="section-code entrance fade-up">Conceito e função</div>
+      <div class="section-page entrance fade-up delay-1">02 / 08</div>
     </div>
     <div class="content">
       <div class="concept-grid">
         <div class="concept-copy">
-          <h2>Vias que <span class="accent-ruby">conectam</span> o sistema</h2>
-          <p>CPU, memória e periféricos precisam trocar informação.</p>
+          <h2 class="entrance fade-up delay-1">Vias que <span class="accent-ruby">conectam</span> o sistema</h2>
+          <p class="entrance fade-up delay-2">CPU, memória e periféricos precisam trocar informação.</p>
         </div>
-        <svg class="road-svg" viewBox="0 0 620 360" role="img" aria-label="CPU transmitindo dados, endereços e controle para memória e dispositivos">
-          <line class="road-wire" x1="120" y1="145" x2="190" y2="145" />
-          <line class="road-wire flow cyan" x1="310" y1="145" x2="500" y2="145" />
-          <line class="road-wire" x1="120" y1="180" x2="190" y2="180" />
-          <line class="road-wire flow silver" x1="310" y1="180" x2="500" y2="180" />
-          <line class="road-wire" x1="120" y1="215" x2="190" y2="215" />
-          <line class="road-wire flow ruby" x1="310" y1="215" x2="500" y2="215" />
+        <svg class="road-svg entrance scale delay-3" viewBox="0 0 620 360" role="img" aria-label="CPU transmitindo dados, endereços e controle para memória e dispositivos">
+          <line class="road-wire svg-entrance-draw delay-1" x1="120" y1="145" x2="190" y2="145" style="stroke-dasharray: 70; stroke-dashoffset: 70;" />
+          <line class="road-wire flow cyan svg-entrance-draw delay-2" x1="310" y1="145" x2="500" y2="145" style="stroke-dasharray: 190; stroke-dashoffset: 190;" />
+          <line class="road-wire svg-entrance-draw delay-1" x1="120" y1="180" x2="190" y2="180" style="stroke-dasharray: 70; stroke-dashoffset: 70;" />
+          <line class="road-wire flow silver svg-entrance-draw delay-2" x1="310" y1="180" x2="500" y2="180" style="stroke-dasharray: 190; stroke-dashoffset: 190;" />
+          <line class="road-wire svg-entrance-draw delay-1" x1="120" y1="215" x2="190" y2="215" style="stroke-dasharray: 70; stroke-dashoffset: 70;" />
+          <line class="road-wire flow ruby svg-entrance-draw delay-2" x1="310" y1="215" x2="500" y2="215" style="stroke-dasharray: 190; stroke-dashoffset: 190;" />
 
-          <g class="road-endpoint cpu" transform="translate(10 125)">
+          <g class="road-endpoint cpu svg-entrance-scale delay-3" transform="translate(10 125)">
             <rect width="110" height="110" rx="7" />
             <text x="55" y="48">CPU</text>
             <text class="sub" x="55" y="72">ORIGEM</text>
           </g>
-          <g class="road-endpoint system" transform="translate(500 125)">
+          <g class="road-endpoint system svg-entrance-scale delay-4" transform="translate(500 125)">
             <rect width="110" height="110" rx="7" />
             <text x="55" y="43">MEM</text>
             <text class="sub" x="55" y="63">I/O</text>
             <text class="sub" x="55" y="82">DESTINO</text>
           </g>
 
-          <g class="road-label" transform="translate(190 128)">
+          <g class="road-label svg-entrance-fade delay-3" transform="translate(190 128)">
             <rect width="120" height="34" rx="17" />
             <text x="60" y="17">DADOS</text>
           </g>
-          <g class="road-label" transform="translate(190 163)">
+          <g class="road-label svg-entrance-fade delay-4" transform="translate(190 163)">
             <rect width="120" height="34" rx="17" />
             <text x="60" y="17">ENDEREÇOS</text>
           </g>
-          <g class="road-label" transform="translate(190 198)">
+          <g class="road-label svg-entrance-fade delay-5" transform="translate(190 198)">
             <rect width="120" height="34" rx="17" />
             <text x="60" y="17">CONTROLE</text>
           </g>
 
-          <circle class="road-packet" r="7" fill="#00a9d6" aria-label="Pacote de dados fluindo">
+          <circle class="road-packet svg-entrance-scale delay-5" r="7" fill="#00a9d6" aria-label="Pacote de dados fluindo">
             <animate attributeName="cx" values="318;486;318" dur="3.2s" repeatCount="indefinite" />
             <animate attributeName="cy" values="145;145;145" dur="3.2s" repeatCount="indefinite" />
           </circle>
-          <circle class="road-packet silver" r="7" fill="#a9aca9" aria-label="Pacote de endereços fluindo">
+          <circle class="road-packet silver svg-entrance-scale delay-6" r="7" fill="#a9aca9" aria-label="Pacote de endereços fluindo">
             <animate attributeName="cx" values="486;318;486" dur="3.8s" begin="-1s" repeatCount="indefinite" />
             <animate attributeName="cy" values="180;180;180" dur="3.8s" begin="-1s" repeatCount="indefinite" />
           </circle>
@@ -632,61 +735,61 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Tipos de barramento</div>
-      <div class="section-page">03 / 08</div>
+      <div class="section-code entrance fade-up">Tipos de barramento</div>
+      <div class="section-page entrance fade-up delay-1">03 / 08</div>
     </div>
     <div class="content">
       <div class="types-wrap">
-        <h2>Três funções. <span class="accent-cyan">Três vias.</span></h2>
+        <h2 class="entrance fade-up delay-1">Três funções. <span class="accent-cyan">Três vias.</span></h2>
         <div class="types-grid">
-          <article class="type-card" style="--card-accent: var(--cyan);">
-            <svg class="type-visual" viewBox="0 0 220 150" role="img" aria-label="Blocos de dados percorrendo o barramento">
-              <line class="type-data-line" x1="20" y1="75" x2="200" y2="75" />
-              <line class="type-data-line type-data-flow" x1="20" y1="75" x2="200" y2="75" />
-              <rect class="type-data-packet" y="64" width="22" height="22" rx="3">
+          <article class="type-card entrance scale delay-1" style="--card-accent: var(--cyan);">
+            <svg class="type-visual entrance scale delay-2" viewBox="0 0 220 150" role="img" aria-label="Blocos de dados percorrendo o barramento">
+              <line class="type-data-line svg-entrance-draw delay-1" x1="20" y1="75" x2="200" y2="75" style="stroke-dasharray: 180; stroke-dashoffset: 180;" />
+              <line class="type-data-line type-data-flow svg-entrance-draw delay-2" x1="20" y1="75" x2="200" y2="75" style="stroke-dasharray: 180; stroke-dashoffset: 180;" />
+              <rect class="type-data-packet svg-entrance-scale delay-3" y="64" width="22" height="22" rx="3">
                 <animate attributeName="x" values="25;178;25" dur="3s" repeatCount="indefinite" />
               </rect>
-              <rect class="type-data-packet" y="64" width="22" height="22" rx="3">
+              <rect class="type-data-packet svg-entrance-scale delay-4" y="64" width="22" height="22" rx="3">
                 <animate attributeName="x" values="70;178;70" dur="3s" begin="-.7s" repeatCount="indefinite" />
               </rect>
-              <rect class="type-data-packet" y="64" width="22" height="22" rx="3">
+              <rect class="type-data-packet svg-entrance-scale delay-5" y="64" width="22" height="22" rx="3">
                 <animate attributeName="x" values="115;178;115" dur="3s" begin="-1.4s" repeatCount="indefinite" />
               </rect>
             </svg>
-            <div class="type-index">01</div>
-            <h3>Dados</h3>
-            <p>O que viaja.</p>
+            <div class="type-index entrance fade delay-2">01</div>
+            <h3 class="entrance fade-up delay-3">Dados</h3>
+            <p class="entrance fade delay-4">O que viaja.</p>
           </article>
-          <article class="type-card" style="--card-accent: var(--silver);">
-            <svg class="type-visual" viewBox="0 0 220 150" role="img" aria-label="Endereço selecionando uma posição de memória">
-              <rect class="addr-cell" x="20" y="20" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="66" y="20" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit delay-1" x="112" y="20" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="158" y="20" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="20" y="58" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="66" y="58" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit delay-2" x="112" y="58" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="158" y="58" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="20" y="96" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="66" y="96" width="40" height="30" rx="3" />
-              <rect class="addr-cell" x="112" y="96" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit" x="158" y="96" width="40" height="30" rx="3" />
+          <article class="type-card entrance scale delay-2" style="--card-accent: var(--silver);">
+            <svg class="type-visual entrance scale delay-3" viewBox="0 0 220 150" role="img" aria-label="Endereço selecionando uma posição de memória">
+              <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="20" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="20" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit delay-1 svg-entrance-scale delay-2" x="112" y="20" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="158" y="20" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="58" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="58" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit delay-2 svg-entrance-scale delay-3" x="112" y="58" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="158" y="58" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="96" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="96" width="40" height="30" rx="3" />
+              <rect class="addr-cell svg-entrance-fade delay-1" x="112" y="96" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit svg-entrance-scale delay-4" x="158" y="96" width="40" height="30" rx="3" />
             </svg>
-            <div class="type-index">02</div>
-            <h3>Endereços</h3>
-            <p>Onde.</p>
+            <div class="type-index entrance fade delay-3">02</div>
+            <h3 class="entrance fade-up delay-4">Endereços</h3>
+            <p class="entrance fade delay-5">Onde.</p>
           </article>
-          <article class="type-card" style="--card-accent: var(--ruby);">
-            <svg class="type-visual" viewBox="0 0 220 150" role="img" aria-label="Relógio igual ao relógio do barramento de controle">
-              <circle class="type-clock-orbit" cx="110" cy="75" r="58" />
-              <circle class="type-clock-inner" cx="110" cy="75" r="48" />
-              <circle class="type-clock-face" cx="110" cy="75" r="38" />
-              <line class="type-clock-hand" x1="110" y1="75" x2="110" y2="40" />
-              <circle class="type-clock-cap" cx="110" cy="75" r="5" />
+          <article class="type-card entrance scale delay-3" style="--card-accent: var(--ruby);">
+            <svg class="type-visual entrance scale delay-4" viewBox="0 0 220 150" role="img" aria-label="Relógio igual ao relógio do barramento de controle">
+              <circle class="type-clock-orbit svg-entrance-draw delay-1" cx="110" cy="75" r="58" style="stroke-dasharray: 364; stroke-dashoffset: 364;" />
+              <circle class="type-clock-inner svg-entrance-draw delay-2" cx="110" cy="75" r="48" style="stroke-dasharray: 301; stroke-dashoffset: 301;" />
+              <circle class="type-clock-face svg-entrance-scale delay-3" cx="110" cy="75" r="38" />
+              <line class="type-clock-hand svg-entrance-scale delay-4" x1="110" y1="75" x2="110" y2="40" />
+              <circle class="type-clock-cap svg-entrance-scale delay-5" cx="110" cy="75" r="5" />
             </svg>
-            <div class="type-index">03</div>
-            <h3>Controle</h3>
-            <p>Quando e como.</p>
+            <div class="type-index entrance fade delay-4">03</div>
+            <h3 class="entrance fade-up delay-5">Controle</h3>
+            <p class="entrance fade delay-6">Quando e como.</p>
           </article>
         </div>
       </div>
@@ -701,68 +804,68 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Barramento de dados</div>
-      <div class="section-page">04 / 08</div>
+      <div class="section-code entrance fade-up">Barramento de dados</div>
+      <div class="section-page entrance fade-up delay-1">04 / 08</div>
     </div>
     <div class="content">
       <div class="data-wrap">
         <div>
-          <div class="eyebrow">Conteúdo da transmissão</div>
-          <h2 style="margin-top:16px;">O dado <span class="accent-cyan">vai e volta</span></h2>
-          <svg class="data-svg" viewBox="0 0 720 260" style="margin-top:18px;" role="img" aria-label="Blocos de dados viajando nos dois sentidos entre CPU e memória">
-            <line class="data-wire" x1="170" y1="130" x2="550" y2="130" />
-            <line class="data-wire flow" x1="170" y1="130" x2="550" y2="130" />
-            <polygon class="data-arrow" points="550,116 574,130 550,144" />
-            <polygon class="data-arrow" points="170,116 146,130 170,144" />
-            <g class="data-node cpu" transform="translate(20 82)">
+          <div class="eyebrow entrance fade-up delay-1">Conteúdo da transmissão</div>
+          <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O dado <span class="accent-cyan">vai e volta</span></h2>
+          <svg class="data-svg entrance scale delay-3" viewBox="0 0 720 260" style="margin-top:18px;" role="img" aria-label="Blocos de dados viajando nos dois sentidos entre CPU e memória">
+            <line class="data-wire svg-entrance-draw delay-1" x1="170" y1="130" x2="550" y2="130" style="stroke-dasharray: 380; stroke-dashoffset: 380;" />
+            <line class="data-wire flow svg-entrance-draw delay-2" x1="170" y1="130" x2="550" y2="130" style="stroke-dasharray: 380; stroke-dashoffset: 380;" />
+            <polygon class="data-arrow svg-entrance-fade delay-3" points="550,116 574,130 550,144" />
+            <polygon class="data-arrow svg-entrance-fade delay-3" points="170,116 146,130 170,144" />
+            <g class="data-node cpu svg-entrance-scale delay-4" transform="translate(20 82)">
               <rect width="150" height="96" rx="7" />
               <text x="75" y="43">CPU</text>
               <text class="sub" x="75" y="67">ORIGEM</text>
             </g>
-            <g class="data-node mem" transform="translate(550 82)">
+            <g class="data-node mem svg-entrance-scale delay-5" transform="translate(550 82)">
               <rect width="150" height="96" rx="7" />
               <text x="75" y="43">MEM</text>
               <text class="sub" x="75" y="67">DESTINO</text>
             </g>
-            <rect class="data-block" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
+            <rect class="data-block svg-entrance-scale delay-5" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
               <animate attributeName="x" values="178;520;178" dur="3.2s" repeatCount="indefinite" />
             </rect>
-            <rect class="data-block" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
+            <rect class="data-block svg-entrance-scale delay-6" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
               <animate attributeName="x" values="245;520;245" dur="3.2s" begin="-.8s" repeatCount="indefinite" />
             </rect>
-            <rect class="data-block" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
+            <rect class="data-block svg-entrance-scale delay-7" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados CPU → memória">
               <animate attributeName="x" values="312;520;312" dur="3.2s" begin="-1.6s" repeatCount="indefinite" />
             </rect>
-            <rect class="data-block ruby" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
+            <rect class="data-block ruby svg-entrance-scale delay-5" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
               <animate attributeName="x" values="520;178;520" dur="3.6s" begin="-.5s" repeatCount="indefinite" />
             </rect>
-            <rect class="data-block ruby" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
+            <rect class="data-block ruby svg-entrance-scale delay-6" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
               <animate attributeName="x" values="520;245;520" dur="3.6s" begin="-1.4s" repeatCount="indefinite" />
             </rect>
-            <rect class="data-block ruby" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
+            <rect class="data-block ruby svg-entrance-scale delay-7" y="121" width="20" height="20" rx="2" aria-label="Bloco de dados memória → CPU">
               <animate attributeName="x" values="520;312;520" dur="3.6s" begin="-2.3s" repeatCount="indefinite" />
             </rect>
           </svg>
         </div>
-        <aside class="width-readout" aria-label="Comparação de bits por ciclo">
+        <aside class="width-readout entrance slide-left delay-4" aria-label="Comparação de bits por ciclo">
           <div class="compare-title"><span>Bits / ciclo</span><span>Bytes</span></div>
           <div class="compare-list">
-            <div class="compare-row active">
+            <div class="compare-row active entrance fade-up delay-1">
               <span>64 bits</span>
               <div class="compare-bits"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
               <span class="compare-value">8 B</span>
             </div>
-            <div class="compare-row">
+            <div class="compare-row entrance fade-up delay-2">
               <span>32 bits</span>
               <div class="compare-bits"><i></i><i></i><i></i><i></i></div>
               <span class="compare-value">4 B</span>
             </div>
-            <div class="compare-row">
+            <div class="compare-row entrance fade-up delay-3">
               <span>16 bits</span>
               <div class="compare-bits"><i></i><i></i></div>
               <span class="compare-value">2 B</span>
             </div>
-            <div class="compare-row">
+            <div class="compare-row entrance fade-up delay-4">
               <span>8 bits</span>
               <div class="compare-bits"><i></i></div>
               <span class="compare-value">1 B</span>
@@ -781,66 +884,66 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Barramento de endereços</div>
-      <div class="section-page">05 / 08</div>
+      <div class="section-code entrance fade-up">Barramento de endereços</div>
+      <div class="section-page entrance fade-up delay-1">05 / 08</div>
     </div>
     <div class="content">
       <div class="address-wrap">
         <div class="address-copy">
-          <div class="eyebrow">Identificação do destino</div>
-          <h2 style="margin-top:16px;">O endereço aponta o <span class="accent-ruby">destino</span></h2>
-          <p>Seleciona a posição acessada.</p>
-          <div class="address-limits">
+          <div class="eyebrow entrance fade-up delay-1">Identificação do destino</div>
+          <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O endereço aponta o <span class="accent-ruby">destino</span></h2>
+          <p class="entrance fade delay-3">Seleciona a posição acessada.</p>
+          <div class="address-limits entrance fade-up delay-4">
             <span class="chip ruby">32 bits → 4 GB</span>
             <span class="chip">64 bits → 2⁶⁴</span>
           </div>
         </div>
-        <svg class="address-svg" viewBox="0 0 680 360" role="img" aria-label="Endereço da CPU selecionando uma posição de memória">
-          <text x="535" y="34" text-anchor="middle" fill="#686d72" font-family="Cascadia Code, Consolas, monospace" font-size="11" font-weight="600" letter-spacing="2">MEMÓRIA / I/O</text>
+        <svg class="address-svg entrance scale delay-3" viewBox="0 0 680 360" role="img" aria-label="Endereço da CPU selecionando uma posição de memória">
+          <text class="svg-entrance-fade delay-1" x="535" y="34" text-anchor="middle" fill="#686d72" font-family="Cascadia Code, Consolas, monospace" font-size="11" font-weight="600" letter-spacing="2">MEMÓRIA / I/O</text>
 
-          <g class="address-node cpu" transform="translate(20 135)">
+          <g class="address-node cpu svg-entrance-scale delay-2" transform="translate(20 135)">
             <rect width="130" height="90" rx="7" />
             <text x="65" y="40">CPU</text>
             <text class="sub" x="65" y="64">GERA ENDEREÇO</text>
           </g>
 
-          <line class="address-wire" x1="150" y1="180" x2="394" y2="180" />
-          <line class="address-wire flow" x1="150" y1="180" x2="394" y2="180" />
-          <polygon points="372,166 394,180 372,194" fill="#00a9d6" />
-          <circle class="address-packet" r="8">
+          <line class="address-wire svg-entrance-draw delay-1" x1="150" y1="180" x2="394" y2="180" style="stroke-dasharray: 244; stroke-dashoffset: 244;" />
+          <line class="address-wire flow svg-entrance-draw delay-2" x1="150" y1="180" x2="394" y2="180" style="stroke-dasharray: 244; stroke-dashoffset: 244;" />
+          <polygon class="svg-entrance-fade delay-3" points="372,166 394,180 372,194" fill="#00a9d6" />
+          <circle class="address-packet svg-entrance-scale delay-4" r="8">
             <animateMotion dur="3.2s" repeatCount="indefinite" path="M158,180 L382,180" />
           </circle>
 
-          <g class="address-tag" transform="translate(220 156)">
+          <g class="address-tag svg-entrance-scale delay-3" transform="translate(220 156)">
             <rect width="130" height="48" rx="24" />
             <text x="65" y="24">0x3F2A</text>
           </g>
 
           <!-- Address counter visualization -->
-          <g class="address-counter" transform="translate(150 35)" aria-label="Contador de endereços incrementando" style="visibility: visible;">
+          <g class="address-counter svg-entrance-scale delay-4" transform="translate(150 35)" aria-label="Contador de endereços incrementando" style="visibility: visible;">
             <rect x="0" y="0" width="120" height="28" rx="4" fill="#0d1015" stroke="rgba(0,169,214,.5)" stroke-width="1.5" />
             <text x="60" y="19" text-anchor="middle" fill="#65d8f2" font="700 14px var(--mono)" letter-spacing=".1em" id="addr-counter" style="visibility: visible;">0x0000</text>
           </g>
 
-          <rect class="address-map-cell" x="400" y="70" width="60" height="45" rx="4" />
-          <rect class="address-map-cell active" x="470" y="70" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="540" y="70" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="610" y="70" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="400" y="70" width="60" height="45" rx="4" />
+          <rect class="address-map-cell active svg-entrance-scale delay-2" x="470" y="70" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="540" y="70" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="610" y="70" width="60" height="45" rx="4" />
 
-          <rect class="address-map-cell" x="400" y="135" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="470" y="135" width="60" height="45" rx="4" />
-          <rect class="address-map-cell active delay-1" x="540" y="135" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="610" y="135" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="400" y="135" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="470" y="135" width="60" height="45" rx="4" />
+          <rect class="address-map-cell active delay-1 svg-entrance-scale delay-3" x="540" y="135" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="610" y="135" width="60" height="45" rx="4" />
 
-          <rect class="address-map-cell" x="400" y="200" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="470" y="200" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="540" y="200" width="60" height="45" rx="4" />
-          <rect class="address-map-cell active delay-2" x="610" y="200" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="400" y="200" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="470" y="200" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="540" y="200" width="60" height="45" rx="4" />
+          <rect class="address-map-cell active delay-2 svg-entrance-scale delay-4" x="610" y="200" width="60" height="45" rx="4" />
 
-          <rect class="address-map-cell" x="400" y="265" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="470" y="265" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="540" y="265" width="60" height="45" rx="4" />
-          <rect class="address-map-cell" x="610" y="265" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="400" y="265" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="470" y="265" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="540" y="265" width="60" height="45" rx="4" />
+          <rect class="address-map-cell svg-entrance-fade delay-1" x="610" y="265" width="60" height="45" rx="4" />
         </svg>
       </div>
     </div>
@@ -855,16 +958,16 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Barramento de controle</div>
-      <div class="section-page">06 / 08</div>
+      <div class="section-code entrance fade-up">Barramento de controle</div>
+      <div class="section-page entrance fade-up delay-1">06 / 08</div>
     </div>
     <div class="content">
       <div class="control-wrap">
         <div class="control-copy">
-          <div class="eyebrow">Coordenação do sistema</div>
-          <h2 style="margin-top:16px;">O <span class="accent-cyan">clock</span> dá o ritmo</h2>
-          <p>O controle define quando e como.</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:28px;">
+          <div class="eyebrow entrance fade-up delay-1">Coordenação do sistema</div>
+          <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O <span class="accent-cyan">clock</span> dá o ritmo</h2>
+          <p class="entrance fade delay-3">O controle define quando e como.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:28px;" class="entrance fade-up delay-4">
             <span class="chip cyan">READ</span>
             <span class="chip cyan">WRITE</span>
             <span class="chip ruby">IRQ</span>
@@ -873,55 +976,55 @@
             <span class="chip">BUS GRANT</span>
           </div>
         </div>
-        <div class="control-demo" aria-hidden="true">
-          <svg class="control-svg" viewBox="0 0 620 440" role="img" aria-label="Clock central coordenando leitura, escrita, interrupções e concessão do barramento">
-            <circle class="control-orbit-svg" cx="310" cy="220" r="160" />
-            <circle class="control-orbit-svg inner" cx="310" cy="220" r="115" />
+        <div class="control-demo entrance scale delay-4" aria-hidden="true">
+          <svg class="control-svg entrance scale delay-5" viewBox="0 0 620 440" role="img" aria-label="Clock central coordenando leitura, escrita, interrupções e concessão do barramento">
+            <circle class="control-orbit-svg svg-entrance-draw delay-1" cx="310" cy="220" r="160" style="stroke-dasharray: 1005; stroke-dashoffset: 1005;" />
+            <circle class="control-orbit-svg inner svg-entrance-draw delay-2" cx="310" cy="220" r="115" style="stroke-dasharray: 722; stroke-dashoffset: 722;" />
 
-            <path class="control-track" d="M310 150 L310 84" />
-            <path class="control-track" d="M380 220 L470 220" />
-            <path class="control-track" d="M310 290 L310 356" />
-            <path class="control-track ruby" d="M240 220 L150 220" />
+            <path class="control-track svg-entrance-draw delay-3" d="M310 150 L310 84" style="stroke-dasharray: 66; stroke-dashoffset: 66;" />
+            <path class="control-track svg-entrance-draw delay-3" d="M380 220 L470 220" style="stroke-dasharray: 90; stroke-dashoffset: 90;" />
+            <path class="control-track svg-entrance-draw delay-3" d="M310 290 L310 356" style="stroke-dasharray: 66; stroke-dashoffset: 66;" />
+            <path class="control-track ruby svg-entrance-draw delay-3" d="M240 220 L150 220" style="stroke-dasharray: 90; stroke-dashoffset: 90;" />
 
-            <circle class="signal-mover" r="6" fill="#65d8f2" aria-label="Sinal de leitura">
+            <circle class="signal-mover svg-entrance-scale delay-5" r="6" fill="#65d8f2" aria-label="Sinal de leitura">
               <animateMotion dur="2.6s" repeatCount="indefinite" path="M310,150 L310,84" />
             </circle>
-            <circle class="signal-mover" r="6" fill="#65d8f2" aria-label="Sinal de escrita">
+            <circle class="signal-mover svg-entrance-scale delay-6" r="6" fill="#65d8f2" aria-label="Sinal de escrita">
               <animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite" path="M470,220 L380,220" />
             </circle>
-            <circle class="signal-mover" r="6" fill="#65d8f2" aria-label="Sinal de clock">
+            <circle class="signal-mover svg-entrance-scale delay-7" r="6" fill="#65d8f2" aria-label="Sinal de clock">
               <animateMotion dur="2.6s" begin="-2s" repeatCount="indefinite" path="M310,356 L310,290" />
             </circle>
-            <circle class="signal-mover" r="6" fill="#f05b7c" aria-label="Sinal de interrupção">
+            <circle class="signal-mover svg-entrance-scale delay-8" r="6" fill="#f05b7c" aria-label="Sinal de interrupção">
               <animateMotion dur="2.6s" begin="-.65s" repeatCount="indefinite" path="M150,220 L240,220" />
             </circle>
 
-            <g class="control-node">
+            <g class="control-node svg-entrance-scale delay-4" transform="translate(0,0)">
               <rect x="210" y="20" width="200" height="64" rx="6" />
               <text x="310" y="46">READ / WRITE</text>
               <text class="sub" x="310" y="67">TIPO DE OPERAÇÃO</text>
             </g>
-            <g class="control-node irq delay-1">
+            <g class="control-node irq svg-entrance-scale delay-5">
               <rect x="470" y="188" width="135" height="64" rx="6" />
               <text x="537.5" y="214">IRQ</text>
               <text class="sub" x="537.5" y="235">INTERRUPÇÃO</text>
             </g>
-            <g class="control-node delay-2">
+            <g class="control-node svg-entrance-scale delay-6">
               <rect x="210" y="356" width="200" height="64" rx="6" />
               <text x="310" y="382">BUS GRANT</text>
               <text class="sub" x="310" y="403">ACESSO CONCEDIDO</text>
             </g>
-            <g class="control-node delay-3">
+            <g class="control-node svg-entrance-scale delay-7">
               <rect x="15" y="188" width="135" height="64" rx="6" />
               <text x="82.5" y="214">BUS REQ</text>
               <text class="sub" x="82.5" y="235">SOLICITAÇÃO</text>
             </g>
 
-            <circle class="control-center-disc" cx="310" cy="220" r="70" />
-            <line class="control-hand" x1="310" y1="220" x2="310" y2="169" />
-            <circle class="control-hand-cap" cx="310" cy="220" r="6" />
-            <text class="control-center-text" x="310" y="250">CLOCK</text>
-            <text class="control-center-sub" x="310" y="270">RITMO</text>
+            <circle class="control-center-disc svg-entrance-scale delay-4" cx="310" cy="220" r="70" />
+            <line class="control-hand svg-entrance-draw delay-5" x1="310" y1="220" x2="310" y2="169" style="stroke-dasharray: 51; stroke-dashoffset: 51;" />
+            <circle class="control-hand-cap svg-entrance-scale delay-5" cx="310" cy="220" r="6" />
+            <text class="control-center-text svg-entrance-fade delay-6" x="310" y="250">CLOCK</text>
+            <text class="control-center-sub svg-entrance-fade delay-7" x="310" y="270">RITMO</text>
           </svg>
         </div>
       </div>
@@ -936,37 +1039,44 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Barramento interno e externo</div>
-      <div class="section-page">07 / 08</div>
+      <div class="section-code entrance fade-up">Barramento interno e externo</div>
+      <div class="section-page entrance fade-up delay-1">07 / 08</div>
     </div>
     <div class="content">
-      <div class="inside-outside">
+      <div class="inside-outside entrance scale delay-2">
         <article class="side internal">
           <div>
-            <div class="eyebrow" style="color:#aeb4b9;">Dentro do processador</div>
-            <h3 style="margin-top:14px;">Interno</h3>
-            <p>Curto · rápido</p>
+            <div class="eyebrow entrance fade-up delay-1" style="color:#aeb4b9;">Dentro do processador</div>
+            <h3 style="margin-top:14px;" class="entrance fade-up delay-2">Interno</h3>
+            <p class="entrance fade delay-3">Curto · rápido</p>
           </div>
-          <div class="side-diagram" aria-hidden="true">
-            <div class="core-orbit"></div><div class="core-orbit two"></div><div class="core-chip">CPU</div>
+          <div class="side-diagram entrance scale delay-4" aria-hidden="true">
+            <div class="core-orbit svg-entrance-draw delay-1"></div>
+            <div class="core-orbit two svg-entrance-draw delay-2"></div>
+            <div class="core-chip svg-entrance-scale delay-3">CPU</div>
           </div>
-          <div class="chip-row"><span class="chip cyan">FSB</span><span class="chip cyan">QPI / UPI</span><span class="chip cyan">Infinity Fabric</span></div>
+          <div class="chip-row entrance fade-up delay-5"><span class="chip cyan">FSB</span><span class="chip cyan">QPI / UPI</span><span class="chip cyan">Infinity Fabric</span></div>
         </article>
-        <div class="system-bridge" aria-hidden="true">
-          <i class="bridge-packet" aria-label="Pacote de dados atravessando barramento interno → externo"></i>
-          <i class="bridge-packet ruby" aria-label="Pacote de controle retornando externo → interno"></i>
-          <span>BUS</span>
+        <div class="system-bridge entrance scale delay-3" aria-hidden="true">
+          <i class="bridge-packet svg-entrance-scale delay-4" aria-label="Pacote de dados atravessando barramento interno → externo"></i>
+          <i class="bridge-packet ruby svg-entrance-scale delay-5" aria-label="Pacote de controle retornando externo → interno"></i>
+          <span class="svg-entrance-fade delay-4">BUS</span>
         </div>
         <article class="side external">
           <div>
-            <div class="eyebrow">Placa-mãe e periféricos</div>
-            <h3 style="margin-top:14px;">Externo</h3>
-            <p>Variado · expansível</p>
+            <div class="eyebrow entrance fade-up delay-1">Placa-mãe e periféricos</div>
+            <h3 style="margin-top:14px;" class="entrance fade-up delay-2">Externo</h3>
+            <p class="entrance fade delay-3">Variado · expansível</p>
           </div>
-          <div class="side-diagram" style="inset:22% 8% 24%;" aria-hidden="true">
-            <div class="docks"><i class="dock"></i><i class="dock"></i><i class="dock"></i><i class="dock"></i></div>
+          <div class="side-diagram entrance scale delay-4" style="inset:22% 8% 24%;" aria-hidden="true">
+            <div class="docks">
+              <i class="dock svg-entrance-scale delay-1"></i>
+              <i class="dock svg-entrance-scale delay-2"></i>
+              <i class="dock svg-entrance-scale delay-3"></i>
+              <i class="dock svg-entrance-scale delay-4"></i>
+            </div>
           </div>
-          <div class="chip-row"><span class="chip ruby">PCIe</span><span class="chip ruby">USB</span><span class="chip ruby">SATA / NVMe</span></div>
+          <div class="chip-row entrance fade-up delay-5"><span class="chip ruby">PCIe</span><span class="chip ruby">USB</span><span class="chip ruby">SATA / NVMe</span></div>
         </article>
       </div>
     </div>
@@ -981,46 +1091,46 @@
       <div class="frame-line"></div>
     </div>
     <div class="topline">
-      <div class="section-code">Síntese</div>
-      <div class="section-page">08 / 08</div>
+      <div class="section-code entrance fade-up">Síntese</div>
+      <div class="section-page entrance fade-up delay-1">08 / 08</div>
     </div>
     <div class="content">
       <div class="summary-wrap">
         <div class="summary-copy">
-          <div class="eyebrow">O sistema inteiro em movimento</div>
-          <h2 style="margin-top:18px;">Conectar é <span class="accent-cyan">comunicar</span></h2>
-          <p>Dados + endereços + controle.</p>
+          <div class="eyebrow entrance fade-up delay-1">O sistema inteiro em movimento</div>
+          <h2 style="margin-top:18px;" class="entrance fade-up delay-2">Conectar é <span class="accent-cyan">comunicar</span></h2>
+          <p class="entrance fade delay-3">Dados + endereços + controle.</p>
         </div>
-        <div class="convergence" aria-hidden="true">
-          <svg class="summary-svg" viewBox="0 0 620 440" role="img" aria-label="Dados, endereços e controle convergindo no barramento do sistema">
-            <path class="summary-wire" d="M176 82 C292 82 338 178 468 214" />
-            <path class="summary-wire silver" d="M176 220 L468 220" />
-            <path class="summary-wire ruby" d="M176 358 C292 358 338 262 468 226" />
-            <circle class="summary-mover" r="7" fill="#65d8f2">
+        <div class="convergence entrance scale delay-3" aria-hidden="true">
+          <svg class="summary-svg entrance scale delay-4" viewBox="0 0 620 440" role="img" aria-label="Dados, endereços e controle convergindo no barramento do sistema">
+            <path class="summary-wire svg-entrance-draw delay-1" d="M176 82 C292 82 338 178 468 214" style="stroke-dasharray: 450; stroke-dashoffset: 450;" />
+            <path class="summary-wire silver svg-entrance-draw delay-2" d="M176 220 L468 220" style="stroke-dasharray: 292; stroke-dashoffset: 292;" />
+            <path class="summary-wire ruby svg-entrance-draw delay-3" d="M176 358 C292 358 338 262 468 226" style="stroke-dasharray: 450; stroke-dashoffset: 450;" />
+            <circle class="summary-mover svg-entrance-scale delay-4" r="7" fill="#65d8f2">
               <animateMotion dur="3.5s" repeatCount="indefinite" path="M176,82 C292,82 338,178 468,214" />
             </circle>
-            <circle class="summary-mover" r="7" fill="#b5b8b6">
+            <circle class="summary-mover svg-entrance-scale delay-5" r="7" fill="#b5b8b6">
               <animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite" path="M176,220 L468,220" />
             </circle>
-            <circle class="summary-mover" r="7" fill="#f05b7c">
+            <circle class="summary-mover svg-entrance-scale delay-6" r="7" fill="#f05b7c">
               <animateMotion dur="3.8s" begin="-2s" repeatCount="indefinite" path="M176,358 C292,358 338,262 468,226" />
             </circle>
-            <g class="summary-label cyan" transform="translate(42 58)">
+            <g class="summary-label cyan svg-entrance-scale delay-4" transform="translate(42 58)">
               <rect width="128" height="48" rx="5" />
               <text x="64" y="24" text-anchor="middle">DADOS</text>
             </g>
-            <g class="summary-label" transform="translate(42 196)">
+            <g class="summary-label svg-entrance-scale delay-5" transform="translate(42 196)">
               <rect width="128" height="48" rx="5" />
               <text x="64" y="24" text-anchor="middle">ENDEREÇOS</text>
             </g>
-            <g class="summary-label ruby" transform="translate(42 334)">
+            <g class="summary-label ruby svg-entrance-scale delay-6" transform="translate(42 334)">
               <rect width="128" height="48" rx="5" />
               <text x="64" y="24" text-anchor="middle">CONTROLE</text>
             </g>
-            <circle class="summary-hub-ring" cx="500" cy="220" r="92" />
-            <circle class="summary-hub-ring" cx="500" cy="220" r="70" />
-            <circle class="summary-hub" cx="500" cy="220" r="48" />
-            <text class="summary-hub-text" x="500" y="227">BUS</text>
+            <circle class="summary-hub-ring svg-entrance-draw delay-6" cx="500" cy="220" r="92" style="stroke-dasharray: 578; stroke-dashoffset: 578;" />
+            <circle class="summary-hub-ring svg-entrance-draw delay-7" cx="500" cy="220" r="70" style="stroke-dasharray: 440; stroke-dashoffset: 440;" />
+            <circle class="summary-hub svg-entrance-scale delay-7" cx="500" cy="220" r="48" />
+            <text class="summary-hub-text svg-entrance-fade delay-8" x="500" y="227">BUS</text>
           </svg>
         </div>
       </div>
