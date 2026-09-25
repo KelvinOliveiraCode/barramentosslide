@@ -1,0 +1,151 @@
+# 🖥️ ROTEIRO DE APRESENTAÇÃO: BARRAMENTO DO SISTEMA
+
+---
+
+## SLIDE 1 – CAPA
+
+**Título:** Barramento do Sistema – A Espinha Dorsal do Computador
+
+**[FALA DO APRESENTADOR]:**
+
+> "Bom dia/Boa tarde a todos. Hoje vamos falar sobre um dos componentes mais fundamentais da arquitetura de computadores: o barramento do sistema. Sem ele, simplesmente não existiria comunicação entre os componentes de um computador. Vamos entender o que ele é, como funciona e quais são os seus tipos."
+
+---
+
+## SLIDE 2 – CONCEITO E FUNÇÃO
+
+**Tópicos no slide:**
+- Definição de barramento (bus)
+- Função principal
+- Analogia visual (rodovia)
+
+**[FALA DO APRESENTADOR]:**
+
+> "O barramento, ou *bus*, é um conjunto de linhas de comunicação — fios, trilhas ou canais — por onde trafegam dados, endereços e sinais de controle entre os componentes do computador.
+>
+> Pensem nele como uma **rodovia**: assim como uma estrada conecta diferentes bairros e permite o fluxo de veículos, o barramento conecta o processador à memória, aos periféricos e aos demais dispositivos, permitindo o fluxo de informações.
+>
+> Sua função principal é **garantir a transferência de dados de forma organizada e sincronizada**, evitando conflitos e assegurando que cada informação chegue ao destino correto."
+
+**[TRANSIÇÃO]:** "Agora que entendemos o conceito, vamos ver os três tipos de barramento."
+
+---
+
+## SLIDE 3 – TIPOS DE BARRAMENTO (VISÃO GERAL)
+
+**Tópicos no slide:**
+- Barramento de Dados (ciano) — o que viaja
+- Barramento de Endereços (prata) — onde
+- Barramento de Controle (rubi) — quando e como
+
+**[FALA DO APRESENTADOR]:**
+
+> "O barramento do sistema é composto por três subsistemas principais, cada um com sua cor e função:
+>
+> 1. **Barramento de Dados** (ciano) — transporta os dados em si, o conteúdo da informação.
+> 2. **Barramento de Endereços** (prata) — indica *para onde* os dados devem ir, seleciona a posição de memória.
+> 3. **Barramento de Controle** (rubi) — coordena *como* e *quando* a transferência acontece, é o maestro da orquestra.
+>
+> Cada um cumpre um papel: dados transportam, endereços localizam, controle orquestra. Vamos detalhar cada um."
+
+---
+
+## SLIDE 4 – BARRAMENTO DE DADOS
+
+**Tópicos no slide:**
+- Transporta os dados entre CPU, memória e I/O
+- Bidirecional (ida e volta)
+- Largura: 8, 16, 32, 64 bits → bytes por ciclo
+
+**[FALA DO APRESENTADOR]:**
+
+> "O barramento de dados é o canal por onde os dados propriamente ditos são transferidos. Ele é **bidirecional**, ou seja, os dados podem ir da CPU para a memória e vice-versa — vejam os blocos ciano indo e os rubi voltando na animação.
+>
+> A **largura** desse barramento — medida em bits — determina quantos dados podem ser transferidos simultaneamente por ciclo de clock. Um barramento de 64 bits transporta 8 bytes por ciclo; um de 32 bits, 4 bytes; 16 bits = 2 bytes; 8 bits = 1 byte.
+>
+> Quanto maior a largura, maior a taxa de transferência. É como comparar uma estrada de duas faixas com uma de oito faixas: mais carros passam ao mesmo tempo."
+
+---
+
+## SLIDE 5 – BARRAMENTO DE ENDEREÇOS
+
+**Tópicos no slide:**
+- Unidirecional (CPU → memória/periféricos)
+- Seleciona a posição acessada
+- Largura define memória máxima: 32 bits → 4 GB, 64 bits → 2⁶⁴
+
+**[FALA DO APRESENTADOR]:**
+
+> "O barramento de endereços é **unidirecional** — só a CPU emite endereços, apontando qual posição de memória ou dispositivo será acessado. Vejam o pacote ciano saindo da CPU com o endereço 0x3F2A e a célula correspondente acendendo na grade de memória.
+>
+> A largura deste barramento define a capacidade de endereçamento: 32 bits alcança 4 GB (2³² bytes); 64 bits, 16 exabytes (2⁶⁴). O contador no canto mostra endereços sendo gerados sequencialmente.
+>
+> Sem endereço, o dado não sabe onde ir; sem dado, o endereço não carrega informação. Eles trabalham em par."
+
+---
+
+## SLIDE 6 – BARRAMENTO DE CONTROLE
+
+**Tópicos no slide:**
+- Sinais: READ, WRITE, IRQ, CLK, BUS REQ, BUS GRANT
+- Coordena *quando* e *como*
+- Maioria unidirecional CPU→dispositivos; IRQ e Grant vêm dos periféricos
+
+**[FALA DO APRESENTADOR]:**
+
+> "O barramento de controle é o **maestro da orquestra**. Ele não transporta dados, mas **sinais que coordenam** todas as operações.
+>
+> Os principais sinais:
+> - **READ / WRITE** — indica se a operação é leitura ou escrita nos dados.
+> - **CLK (Clock)** — sincroniza o ritmo; todos os componentes dançam no mesmo compasso.
+> - **IRQ (Interrupt Request)** — periféricos pedem atenção urgente; este sinal vem *do* dispositivo *para* a CPU.
+> - **BUS REQ / BUS GRANT** — arbitram quem usa o barramento quando há múltiplos mestres (DMA, outras CPUs).
+>
+> A maioria dos sinais vai da CPU para fora (unidirecional), mas IRQ e Grant vêm no sentido inverso. Sem controle, os dados trafegariam sem ordem, causando colisões e erros."
+
+---
+
+## SLIDE 7 – BARRAMENTO INTERNO E EXTERNO
+
+**Tópicos no slide:**
+- **Interno** (lado esquerdo, ciano): dentro/próximo da CPU — FSB, QPI/UPI, Infinity Fabric — curto, rápido, GHz
+- **Externo** (lado direito, rubi): placa-mãe → periféricos — PCIe, USB, SATA/NVMe — variado, expansível
+- **Bridge** central: traduz protocolos e velocidades
+
+**[FALA DO APRESENTADOR]:**
+
+> "A distinção interno/externo é fundamental.
+>
+> O **barramento interno** opera *dentro* do processador ou muito próximo a ele. Conecta registradores à ULA, CPU ao cache, CPU ao controlador de memória. Por estar tão próximo, opera em frequências altíssimas — muitas vezes no clock da CPU. Exemplos: Front Side Bus (FSB), Intel QPI/UPI, AMD HyperTransport, Infinity Fabric da AMD.
+>
+> O **barramento externo** (ou de expansão/I/O) conecta o sistema a dispositivos periféricos: placas de vídeo, discos, rede, USB. Opera em velocidades **inferiores**, pois lida com enorme variedade de dispositivos. Exemplos: PCIe 5.0 (até 128 GB/s em x16), SATA, NVMe, USB.
+>
+> A **bridge** no centro faz a tradução de protocolos e adaptação de velocidade entre esses dois mundos. Pacotes ciano cruzam para fora; pacotes rubi (controle) retornam."
+
+---
+
+## SLIDE 8 – SÍNTESE / ENCERRAMENTO
+
+**Tópicos no slide:**
+- Dados + Endereços + Controle = sistema funcionando
+- CPU · Memória · Periféricos conectados
+
+**[FALA DO APRESENTADOR]:**
+
+> "Para finalizar: o barramento do sistema é a **infraestrutura de comunicação** que torna possível o funcionamento integrado de todos os componentes. Sem ele, teríamos apenas peças isoladas.
+>
+> Vimos que **Dados** transportam o conteúdo, **Endereços** localizam o destino, **Controle** orquestra o ritmo. E que **Interno** é rápido e curto (núcleo), **Externo** é versátil e expansível (mundo).
+>
+> Entender essa estrutura nos dá uma visão clara de como a informação flui dentro de um computador.
+>
+> Obrigado pela atenção! Estou aberto a perguntas."
+
+---
+
+## 📌 DICAS PARA O APRESENTADOR
+
+- **Tempo estimado:** 12 a 18 minutos (8 slides × ~1.5–2 min).
+- Use as **animações** nos slides — aponte os pacotes fluindo, o endereço incrementando, os sinais de controle.
+- Se possível, mostre uma **placa-mãe real** e aponte os slots PCIe, conectores SATA/NVMe e o soquete da CPU.
+- Mantenha linguagem acessível; use analogias (rodovia, maestro, orquestra, ponte).
+- Navegação: setas ← →, Espaço, Home/End, toque (swipe), ou URLs `#1` a `#8`.
