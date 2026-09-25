@@ -612,6 +612,43 @@
   .slide .svg-entrance-scale.delay-2 { animation-delay: 200ms; }
   .slide .svg-entrance-scale.delay-3 { animation-delay: 300ms; }
 
+  /* ===== LOOP ANIMATIONS for type cards (address scan + clock sweep) ===== */
+  .addr-scan { animation: addr-scan 3s linear infinite; }
+  @keyframes addr-scan { 0% { opacity:.25; } 12% { opacity:1; } 30% { opacity:.25; } 100% { opacity:.25; } }
+  .addr-cell.hit { animation: address-pulse 3.6s var(--ease-soft) infinite; }
+  .clock-sweep { transform-box: view-box; transform-origin: 110px 75px; animation: clock-sweep 3s linear infinite; }
+  @keyframes clock-sweep { to { transform: rotate(360deg); } }
+  .clock-ping { transform-box: fill-box; transform-origin: center; animation: clock-ping 3s var(--ease-soft) infinite; }
+  @keyframes clock-ping { 0%,100% { opacity:.5; transform:scale(.9);} 50% { opacity:1; transform:scale(1.1);} }
+  .data-pkt { animation: svg-pulse 2s var(--ease-soft) infinite; }
+
+  /* ===== BITS panel: inset padding so edge bits never clip ===== */
+  .width-readout { padding-right: 10px; }
+  .compare-bits { padding: 2px; }
+  .compare-row { padding: 2px 4px; }
+
+  /* ===== CREATIVE LAYOUTS (break the left-text/right-visual repetition) ===== */
+  .band-top { width:100%; max-width:100%; min-width:0; display:grid; gap:10px; text-align:left; }
+  .band-stage { width:100%; max-width:100%; min-width:0; display:grid; place-items:center; overflow:hidden; }
+  .duo-stack { width:100%; max-width:100%; min-width:0; display:grid; grid-template-rows:auto auto; gap:14px; align-content:center; }
+  .trio-dock { width:100%; max-width:100%; min-width:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+  .center-stage { width:100%; max-width:100%; min-width:0; display:grid; justify-items:center; text-align:center; gap:12px; }
+  @media (max-width: 860px) { .trio-dock { grid-template-columns:1fr; } .inspector { top:auto; bottom:70px; right:12px; left:12px; width:auto; transform:translateY(16px); } .slide.is-active .inspector.show { transform:translateY(0); } }
+
+  /* ===== INSPECTOR: click a hotspot -> blur rest + concept card on top ===== */
+  .inspector { position: absolute; z-index: 8; top: 50%; right: clamp(8px, 2vw, 28px); width: min(340px, 32vw); transform: translateY(-50%) translateX(24px) scale(.96); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s var(--ease-soft), transform .55s var(--ease-out), visibility 0s linear .45s; background: #0d1015; border: 1px solid rgba(0,169,214,.5); border-radius: 16px; padding: 22px 20px; color: #f7f7f4; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .slide.is-active .focus-group.has-focus ~ .inspector, .slide.is-active .inspector.show { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(-50%) translateX(0) scale(1); transition-delay: 0s; }
+  .inspector.on-light { background: #0d1015; color: #f7f7f4; }
+  .inspector-kicker { font: 700 10px/1 var(--mono); letter-spacing: .16em; color: var(--cyan-light); text-transform: uppercase; }
+  .inspector h4 { margin: 10px 0 0; font-size: 24px; letter-spacing: -.02em; }
+  .inspector p { margin: 10px 0 0; font-size: 15px; line-height: 1.5; color: #c6ccd1; }
+  .inspector-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.14); font: 600 11px/1.6 var(--mono); letter-spacing: .08em; color: #8fa0aa; text-transform: uppercase; }
+  .inspector-close { position: absolute; top: 8px; right: 10px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); background: transparent; color: #fff; font-size: 16px; cursor: pointer; line-height: 1; }
+  .hotspot { cursor: pointer; }
+  .hotspot:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+  .focus-group.has-focus .hotspot { filter: blur(5px) brightness(.65) saturate(.7) !important; opacity: .38 !important; }
+  .focus-group.has-focus .hotspot.is-focused { filter: none !important; opacity: 1 !important; }
+
   /* ===== FOCUS MODE: click to isolate one element ===== */
   .focus-group { transition: filter .45s var(--ease-soft); }
   /* blur/opacity only — never transform (entrance keyframes own transform) */
@@ -767,12 +804,13 @@
             <circle r="8" fill="#65d8f2"><animateMotion dur="4.2s" repeatCount="indefinite" path="M150,150 L450,150" /></circle>
             <circle r="8" fill="#f05b7c"><animateMotion dur="4.2s" begin="-2.1s" repeatCount="indefinite" path="M450,150 L150,150" /></circle>
             <g class="system-bus-label" transform="translate(240 218)"><rect width="120" height="36" rx="18" /><text x="60" y="18">BARRAMENTO</text></g>
-            <g class="system-node cpu-node" transform="translate(92 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">CPU</text><text class="sub" x="0" y="26" text-anchor="middle">ORIGEM</text></g>
-            <g class="system-node" transform="translate(300 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">MEM</text><text class="sub" x="0" y="26" text-anchor="middle">DESTINO</text></g>
-            <g class="system-node io-node" transform="translate(508 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">I/O</text><text class="sub" x="0" y="26" text-anchor="middle">PERIFERICOS</text></g>
+            <g class="system-node cpu-node hotspot" data-key="cpu" tabindex="0" transform="translate(92 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">CPU</text><text class="sub" x="0" y="26" text-anchor="middle">ORIGEM</text></g>
+            <g class="system-node hotspot" data-key="mem" tabindex="0" transform="translate(300 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">MEM</text><text class="sub" x="0" y="26" text-anchor="middle">DESTINO</text></g>
+            <g class="system-node io-node hotspot" data-key="io" tabindex="0" transform="translate(508 150)"><rect x="-58" y="-58" width="116" height="116" rx="6" /><text x="0" y="2" text-anchor="middle">I/O</text><text class="sub" x="0" y="26" text-anchor="middle">PERIFERICOS</text></g>
           </svg>
         </div>
       </div>
+      <aside class="inspector" id="insp-cover" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Sistema</div><h4>Nós</h4><p>Escolha CPU, MEM ou I/O no diagrama.</p><div class="inspector-meta">origem · destino</div></aside>
     </div>
     <div class="bottomline"><span>Sistema · dados · endereços · controle</span><span>Arquitetura</span></div>
   </section>
@@ -793,9 +831,10 @@
           <h2 class="entrance fade-up delay-1">Vias que <span class="accent-ruby">conectam</span> o sistema</h2>
           <p class="entrance fade-up delay-2">CPU, memória e periféricos precisam trocar informação.</p>
         </div>
-        <svg class="road-svg" viewBox="0 0 600 320" role="img" aria-label="CPU transmitindo dados, enderecos e controle"><line class="road-wire" x1="130" y1="120" x2="180" y2="120" /><line class="road-wire flow cyan" x1="300" y1="120" x2="470" y2="120" /><line class="road-wire" x1="130" y1="160" x2="180" y2="160" /><line class="road-wire flow silver" x1="300" y1="160" x2="470" y2="160" /><line class="road-wire" x1="130" y1="200" x2="180" y2="200" /><line class="road-wire flow ruby" x1="300" y1="200" x2="470" y2="200" /><g class="road-endpoint cpu" transform="translate(20 105)"><rect width="110" height="110" rx="7" /><text x="55" y="48">CPU</text><text class="sub" x="55" y="72">ORIGEM</text></g><g class="road-endpoint system" transform="translate(470 105)"><rect width="110" height="110" rx="7" /><text x="55" y="43">MEM</text><text class="sub" x="55" y="63">I/O</text><text class="sub" x="55" y="82">DESTINO</text></g><g class="road-label" transform="translate(180 103)"><rect width="120" height="34" rx="17" /><text x="60" y="17">DADOS</text></g><g class="road-label" transform="translate(180 143)"><rect width="120" height="34" rx="17" /><text x="60" y="17">ENDERECOS</text></g><g class="road-label" transform="translate(180 183)"><rect width="120" height="34" rx="17" /><text x="60" y="17">CONTROLE</text></g><circle class="road-packet" r="7" fill="#00a9d6"><animate attributeName="cx" values="308;462;308" dur="3.2s" repeatCount="indefinite" /><animate attributeName="cy" values="120;120;120" dur="3.2s" repeatCount="indefinite" /></circle><circle class="road-packet silver" r="7" fill="#a9aca9"><animate attributeName="cx" values="462;308;462" dur="3.8s" begin="-1s" repeatCount="indefinite" /><animate attributeName="cy" values="160;160;160" dur="3.8s" begin="-1s" repeatCount="indefinite" /></circle><circle class="road-packet ruby" r="7" fill="#bd1746"><animate attributeName="cx" values="308;462;308" dur="4.4s" begin="-2s" repeatCount="indefinite" /><animate attributeName="cy" values="200;200;200" dur="4.4s" begin="-2s" repeatCount="indefinite" /></circle></svg>
+        <svg class="road-svg" viewBox="0 0 600 320" role="img" aria-label="CPU transmitindo dados, enderecos e controle"><line class="road-wire" x1="130" y1="120" x2="180" y2="120" /><line class="road-wire flow cyan" x1="300" y1="120" x2="470" y2="120" /><line class="road-wire" x1="130" y1="160" x2="180" y2="160" /><line class="road-wire flow silver" x1="300" y1="160" x2="470" y2="160" /><line class="road-wire" x1="130" y1="200" x2="180" y2="200" /><line class="road-wire flow ruby" x1="300" y1="200" x2="470" y2="200" /><g class="road-endpoint cpu hotspot" data-key="cpu" tabindex="0" transform="translate(20 105)"><rect width="110" height="110" rx="7" /><text x="55" y="48">CPU</text><text class="sub" x="55" y="72">ORIGEM</text></g><g class="road-endpoint system hotspot" data-key="mem" tabindex="0" transform="translate(470 105)"><rect width="110" height="110" rx="7" /><text x="55" y="43">MEM</text><text class="sub" x="55" y="63">I/O</text><text class="sub" x="55" y="82">DESTINO</text></g><g class="road-label hotspot" data-key="dados" tabindex="0" transform="translate(180 103)"><rect width="120" height="34" rx="17" /><text x="60" y="17">DADOS</text></g><g class="road-label hotspot" data-key="ends" tabindex="0" transform="translate(180 143)"><rect width="120" height="34" rx="17" /><text x="60" y="17">ENDERECOS</text></g><g class="road-label hotspot" data-key="ctrl" tabindex="0" transform="translate(180 183)"><rect width="120" height="34" rx="17" /><text x="60" y="17">CONTROLE</text></g><circle class="road-packet" r="7" fill="#00a9d6"><animate attributeName="cx" values="308;462;308" dur="3.2s" repeatCount="indefinite" /><animate attributeName="cy" values="120;120;120" dur="3.2s" repeatCount="indefinite" /></circle><circle class="road-packet silver" r="7" fill="#a9aca9"><animate attributeName="cx" values="462;308;462" dur="3.8s" begin="-1s" repeatCount="indefinite" /><animate attributeName="cy" values="160;160;160" dur="3.8s" begin="-1s" repeatCount="indefinite" /></circle><circle class="road-packet ruby" r="7" fill="#bd1746"><animate attributeName="cx" values="308;462;308" dur="4.4s" begin="-2s" repeatCount="indefinite" /><animate attributeName="cy" values="200;200;200" dur="4.4s" begin="-2s" repeatCount="indefinite" /></circle></svg>
       </div>
     </div>
+      <aside class="inspector on-light" id="insp-concept" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Conceito</div><h4>Vias</h4><p>Escolha um rótulo da rodovia.</p><div class="inspector-meta">dados · endereços · controle</div></aside>
     <div class="bottomline"><span>Função · transferir · sincronizar</span><span>Analogia · rodovia</span></div>
   </section>
 
@@ -832,19 +871,19 @@
             <p class="entrance fade delay-4">O que viaja.</p>
           </article>
           <article class="type-card entrance scale delay-2 focusable" role="button" tabindex="0" style="--card-accent: var(--silver);">
-            <svg class="type-visual entrance scale delay-3" viewBox="0 0 220 150" role="img" aria-label="Endereço selecionando uma posição de memória">
+            <svg class="type-visual entrance scale delay-3" viewBox="0 0 220 150" role="img" aria-label="Endereço selecionando uma posição de memória"><rect class="addr-scan" x="0" y="0" width="220" height="150" fill="none" stroke="none" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="20" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="20" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit delay-1 svg-entrance-scale delay-2" x="112" y="20" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit addr-scan" style="animation-delay:0s" x="112" y="20" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="158" y="20" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="58" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="58" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit delay-2 svg-entrance-scale delay-3" x="112" y="58" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit addr-scan" style="animation-delay:-1s" x="112" y="58" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="158" y="58" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="20" y="96" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="66" y="96" width="40" height="30" rx="3" />
               <rect class="addr-cell svg-entrance-fade delay-1" x="112" y="96" width="40" height="30" rx="3" />
-              <rect class="addr-cell hit svg-entrance-scale delay-4" x="158" y="96" width="40" height="30" rx="3" />
+              <rect class="addr-cell hit addr-scan" style="animation-delay:-2s" x="158" y="96" width="40" height="30" rx="3" />
             </svg>
             <div class="type-index entrance fade delay-3">02</div>
             <h3 class="entrance fade-up delay-4">Endereços</h3>
@@ -854,9 +893,9 @@
             <svg class="type-visual entrance scale delay-4" viewBox="0 0 220 150" role="img" aria-label="Relógio igual ao relógio do barramento de controle">
               <circle class="type-clock-orbit svg-entrance-draw delay-1" cx="110" cy="75" r="58" style="stroke-dasharray: 364; stroke-dashoffset: 364;" />
               <circle class="type-clock-inner svg-entrance-draw delay-2" cx="110" cy="75" r="48" style="stroke-dasharray: 301; stroke-dashoffset: 301;" />
-              <circle class="type-clock-face svg-entrance-scale delay-3" cx="110" cy="75" r="38" />
-              <line class="type-clock-hand svg-entrance-scale delay-4" x1="110" y1="75" x2="110" y2="40" />
-              <circle class="type-clock-cap svg-entrance-scale delay-5" cx="110" cy="75" r="5" />
+              <circle class="type-clock-face clock-ping" style="animation-delay:-1.5s" cx="110" cy="75" r="38" />
+              <line class="type-clock-hand clock-sweep" x1="110" y1="75" x2="110" y2="40" />
+              <circle class="type-clock-cap clock-ping" cx="110" cy="75" r="5" />
             </svg>
             <div class="type-index entrance fade delay-4">03</div>
             <h3 class="entrance fade-up delay-5">Controle</h3>
@@ -865,6 +904,7 @@
         </div>
       </div>
     </div>
+      <aside class="inspector" id="insp-types" aria-live="polite"><button class="inspector-close" aria-label="Fechar">X</button><div class="inspector-kicker">Tipos</div><h4>Tres vias</h4><p>Escolha um cartao.</p><div class="inspector-meta">o que · onde · quando</div></aside>
     <div class="bottomline"><span>Dados · endereços · controle</span><span>Funções</span></div>
   </section>
 
@@ -879,31 +919,31 @@
       <div class="section-page entrance fade-up delay-1">04 / 10</div>
     </div>
     <div class="content">
-      <div class="data-wrap focus-group">
-        <div>
+      <div class="duo-stack focus-group">
+        <div class="center-stage">
           <div class="eyebrow entrance fade-up delay-1">Conteúdo da transmissão</div>
-          <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O dado <span class="accent-cyan">vai e volta</span></h2>
-          <svg class="data-svg" viewBox="0 0 680 240" style="margin-top:18px;" role="img" aria-label="Dados indo e voltando"><line class="data-wire" x1="160" y1="120" x2="520" y2="120" /><line class="data-wire flow" x1="160" y1="120" x2="520" y2="120" /><polygon class="data-arrow" points="520,106 544,120 520,134" /><polygon class="data-arrow" points="160,106 136,120 160,134" /><g class="data-node cpu" transform="translate(10 72)"><rect width="150" height="96" rx="7" /><text x="75" y="43">CPU</text><text class="sub" x="75" y="67">ORIGEM</text></g><g class="data-node mem" transform="translate(520 72)"><rect width="150" height="96" rx="7" /><text x="75" y="43">MEM</text><text class="sub" x="75" y="67">DESTINO</text></g><rect class="data-block" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="168;492;168" dur="3.2s" repeatCount="indefinite" /></rect><rect class="data-block" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="235;492;235" dur="3.2s" begin="-.8s" repeatCount="indefinite" /></rect><rect class="data-block ruby" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="492;168;492" dur="3.6s" begin="-.5s" repeatCount="indefinite" /></rect><rect class="data-block ruby" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="492;235;492" dur="3.6s" begin="-1.4s" repeatCount="indefinite" /></rect></svg>
+          <h2 style="margin-top:10px;" class="entrance fade-up delay-2">O dado <span class="accent-cyan">vai e volta</span></h2>
+          <svg class="data-svg" viewBox="0 0 680 240" style="margin-top:18px;" role="img" aria-label="Dados indo e voltando"><line class="data-wire" x1="160" y1="120" x2="520" y2="120" /><line class="data-wire flow" x1="160" y1="120" x2="520" y2="120" /><polygon class="data-arrow" points="520,106 544,120 520,134" /><polygon class="data-arrow" points="160,106 136,120 160,134" /><g class="data-node cpu hotspot" data-key="cpu" tabindex="0" transform="translate(10 72)"><rect width="150" height="96" rx="7" /><text x="75" y="43">CPU</text><text class="sub" x="75" y="67">ORIGEM</text></g><g class="data-node mem hotspot" data-key="mem" tabindex="0" transform="translate(520 72)"><rect width="150" height="96" rx="7" /><text x="75" y="43">MEM</text><text class="sub" x="75" y="67">DESTINO</text></g><rect class="data-block" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="168;492;168" dur="3.2s" repeatCount="indefinite" /></rect><rect class="data-block" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="235;492;235" dur="3.2s" begin="-.8s" repeatCount="indefinite" /></rect><rect class="data-block ruby" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="492;168;492" dur="3.6s" begin="-.5s" repeatCount="indefinite" /></rect><rect class="data-block ruby" y="111" width="20" height="20" rx="2"><animate attributeName="x" values="492;235;492" dur="3.6s" begin="-1.4s" repeatCount="indefinite" /></rect></svg>
         </div>
         <aside class="width-readout entrance slide-left delay-4 focusable" tabindex="0" aria-label="Comparação de bits por ciclo">
           <div class="compare-title"><span>Bits / ciclo</span><span>Bytes</span></div>
           <div class="compare-list">
-            <div class="compare-row active entrance fade-up delay-1">
+            <div class="compare-row active entrance fade-up delay-1 hotspot" data-key="b64" tabindex="0">
               <span>64 bits</span>
               <div class="compare-bits"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
               <span class="compare-value">8 B</span>
             </div>
-            <div class="compare-row entrance fade-up delay-2">
+            <div class="compare-row entrance fade-up delay-2 hotspot" data-key="b32" tabindex="0">
               <span>32 bits</span>
               <div class="compare-bits"><i></i><i></i><i></i><i></i></div>
               <span class="compare-value">4 B</span>
             </div>
-            <div class="compare-row entrance fade-up delay-3">
+            <div class="compare-row entrance fade-up delay-3 hotspot" data-key="b16" tabindex="0">
               <span>16 bits</span>
               <div class="compare-bits"><i></i><i></i></div>
               <span class="compare-value">2 B</span>
             </div>
-            <div class="compare-row entrance fade-up delay-4">
+            <div class="compare-row entrance fade-up delay-4 hotspot" data-key="b8" tabindex="0">
               <span>8 bits</span>
               <div class="compare-bits"><i></i></div>
               <span class="compare-value">1 B</span>
@@ -911,6 +951,7 @@
           </div>
         </aside>
       </div>
+      <aside class="inspector on-light" id="insp-data" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Dados</div><h4>Vazão</h4><p>Escolha CPU, memória ou uma largura.</p><div class="inspector-meta">bidirecional</div></aside>
     </div>
     <div class="bottomline"><span>Bidirecional · largura = vazão</span><span>CPU ↔ memória</span></div>
   </section>
@@ -926,7 +967,7 @@
       <div class="section-page entrance fade-up delay-1">05 / 10</div>
     </div>
     <div class="content">
-      <div class="address-wrap focus-group">
+      <div class="duo-stack focus-group address-wrap">
         <div class="address-copy">
           <div class="eyebrow entrance fade-up delay-1">Identificação do destino</div>
           <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O endereço aponta o <span class="accent-ruby">destino</span></h2>
@@ -936,9 +977,10 @@
             <span class="chip">64 bits → 2⁶⁴</span>
           </div>
         </div>
-        <svg class="address-svg" viewBox="0 0 640 340" role="img" aria-label="Endereco selecionando memoria"><text x="505" y="26" text-anchor="middle" fill="#686d72" font-size="11" font-weight="600" letter-spacing="2">MEMORIA / I/O</text><g class="address-node cpu" transform="translate(16 120)"><rect width="130" height="90" rx="7" /><text x="65" y="40">CPU</text><text class="sub" x="65" y="64">GERA ENDERECO</text></g><line class="address-wire" x1="146" y1="165" x2="360" y2="165" /><line class="address-wire flow" x1="146" y1="165" x2="360" y2="165" /><polygon points="338,151 360,165 338,179" fill="#00a9d6" /><circle class="address-packet" r="8"><animateMotion dur="3.2s" repeatCount="indefinite" path="M154,165 L348,165" /></circle><g class="address-tag" transform="translate(196 141)"><rect width="130" height="48" rx="24" /><text x="65" y="24">0x3F2A</text></g><g transform="translate(150 30)"><rect x="0" y="0" width="120" height="28" rx="4" fill="#0d1015" stroke="rgba(0,169,214,.5)" stroke-width="1.5" /><text x="60" y="19" text-anchor="middle" fill="#65d8f2" font-size="14" font-weight="700" id="addr-counter">0x0000</text></g><rect class="address-map-cell" x="400" y="60" width="100" height="56" rx="4" /><rect class="address-map-cell active" x="512" y="60" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="128" width="100" height="56" rx="4" /><rect class="address-map-cell active delay-1" x="512" y="128" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="196" width="100" height="56" rx="4" /><rect class="address-map-cell active delay-2" x="512" y="196" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="264" width="100" height="56" rx="4" /><rect class="address-map-cell" x="512" y="264" width="100" height="56" rx="4" /></svg>
+        <svg class="address-svg" viewBox="0 0 640 340" role="img" aria-label="Endereco selecionando memoria"><text x="505" y="26" text-anchor="middle" fill="#686d72" font-size="11" font-weight="600" letter-spacing="2">MEMORIA / I/O</text><g class="address-node cpu hotspot" data-key="cpu" tabindex="0" transform="translate(16 120)"><rect width="130" height="90" rx="7" /><text x="65" y="40">CPU</text><text class="sub" x="65" y="64">GERA ENDERECO</text></g><line class="address-wire" x1="146" y1="165" x2="360" y2="165" /><line class="address-wire flow" x1="146" y1="165" x2="360" y2="165" /><polygon points="338,151 360,165 338,179" fill="#00a9d6" /><circle class="address-packet" r="8"><animateMotion dur="3.2s" repeatCount="indefinite" path="M154,165 L348,165" /></circle><g class="address-tag hotspot" data-key="addr" tabindex="0" transform="translate(196 141)"><rect width="130" height="48" rx="24" /><text x="65" y="24">0x3F2A</text></g><g transform="translate(150 30)"><rect x="0" y="0" width="120" height="28" rx="4" fill="#0d1015" stroke="rgba(0,169,214,.5)" stroke-width="1.5" /><text x="60" y="19" text-anchor="middle" fill="#65d8f2" font-size="14" font-weight="700" id="addr-counter">0x0000</text></g><rect class="address-map-cell" x="400" y="60" width="100" height="56" rx="4" /><rect class="address-map-cell active" x="512" y="60" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="128" width="100" height="56" rx="4" /><rect class="address-map-cell active delay-1" x="512" y="128" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="196" width="100" height="56" rx="4" /><rect class="address-map-cell active delay-2" x="512" y="196" width="100" height="56" rx="4" /><rect class="address-map-cell" x="400" y="264" width="100" height="56" rx="4" /><rect class="address-map-cell" x="512" y="264" width="100" height="56" rx="4" /></svg>
       </div>
     </div>
+      <aside class="inspector on-light" id="insp-addr" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Endereços</div><h4>Destino</h4><p>Escolha a CPU ou o endereço.</p><div class="inspector-meta">unidirecional</div></aside>
     <div class="bottomline"><span>Unidirecional · CPU → destino</span><span>Endereços</span></div>
   </section>
 
@@ -954,8 +996,8 @@
       <div class="section-page entrance fade-up delay-1">06 / 10</div>
     </div>
     <div class="content">
-      <div class="control-wrap focus-group">
-        <div class="control-copy">
+      <div class="duo-stack focus-group">
+        <div class="band-top control-copy">
           <div class="eyebrow entrance fade-up delay-1">Coordenação do sistema</div>
           <h2 style="margin-top:16px;" class="entrance fade-up delay-2">O <span class="accent-cyan">clock</span> dá o ritmo</h2>
           <p class="entrance fade delay-3">O controle define quando e como.</p>
@@ -968,58 +1010,11 @@
             <span class="chip">BUS GRANT</span>
           </div>
         </div>
-        <div class="control-demo entrance scale delay-4 focusable" tabindex="0" aria-hidden="true">
-          <svg class="control-svg entrance scale delay-5" viewBox="0 0 620 440" role="img" aria-label="Clock central coordenando leitura, escrita, interrupções e concessão do barramento">
-            <circle class="control-orbit-svg svg-entrance-draw delay-1" cx="310" cy="220" r="160" style="stroke-dasharray: 1005; stroke-dashoffset: 1005;" />
-            <circle class="control-orbit-svg inner svg-entrance-draw delay-2" cx="310" cy="220" r="115" style="stroke-dasharray: 722; stroke-dashoffset: 722;" />
-
-            <path class="control-track svg-entrance-draw delay-3" d="M310 150 L310 84" style="stroke-dasharray: 66; stroke-dashoffset: 66;" />
-            <path class="control-track svg-entrance-draw delay-3" d="M380 220 L470 220" style="stroke-dasharray: 90; stroke-dashoffset: 90;" />
-            <path class="control-track svg-entrance-draw delay-3" d="M310 290 L310 356" style="stroke-dasharray: 66; stroke-dashoffset: 66;" />
-            <path class="control-track ruby svg-entrance-draw delay-3" d="M240 220 L150 220" style="stroke-dasharray: 90; stroke-dashoffset: 90;" />
-
-            <circle class="signal-mover svg-entrance-scale delay-5" r="6" fill="#65d8f2" aria-label="Sinal de leitura">
-              <animateMotion dur="2.6s" repeatCount="indefinite" path="M310,150 L310,84" />
-            </circle>
-            <circle class="signal-mover svg-entrance-scale delay-6" r="6" fill="#65d8f2" aria-label="Sinal de escrita">
-              <animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite" path="M470,220 L380,220" />
-            </circle>
-            <circle class="signal-mover svg-entrance-scale delay-7" r="6" fill="#65d8f2" aria-label="Sinal de clock">
-              <animateMotion dur="2.6s" begin="-2s" repeatCount="indefinite" path="M310,356 L310,290" />
-            </circle>
-            <circle class="signal-mover svg-entrance-scale delay-8" r="6" fill="#f05b7c" aria-label="Sinal de interrupção">
-              <animateMotion dur="2.6s" begin="-.65s" repeatCount="indefinite" path="M150,220 L240,220" />
-            </circle>
-
-            <g class="control-node svg-entrance-scale delay-4" transform="translate(0,0)">
-              <rect x="210" y="20" width="200" height="64" rx="6" />
-              <text x="310" y="46">READ / WRITE</text>
-              <text class="sub" x="310" y="67">TIPO DE OPERAÇÃO</text>
-            </g>
-            <g class="control-node irq svg-entrance-scale delay-5">
-              <rect x="470" y="188" width="135" height="64" rx="6" />
-              <text x="537.5" y="214">IRQ</text>
-              <text class="sub" x="537.5" y="235">INTERRUPÇÃO</text>
-            </g>
-            <g class="control-node svg-entrance-scale delay-6">
-              <rect x="210" y="356" width="200" height="64" rx="6" />
-              <text x="310" y="382">BUS GRANT</text>
-              <text class="sub" x="310" y="403">ACESSO CONCEDIDO</text>
-            </g>
-            <g class="control-node svg-entrance-scale delay-7">
-              <rect x="15" y="188" width="135" height="64" rx="6" />
-              <text x="82.5" y="214">BUS REQ</text>
-              <text class="sub" x="82.5" y="235">SOLICITAÇÃO</text>
-            </g>
-
-            <circle class="control-center-disc svg-entrance-scale delay-4" cx="310" cy="220" r="70" />
-            <line class="control-hand svg-entrance-draw delay-5" x1="310" y1="220" x2="310" y2="169" style="stroke-dasharray: 51; stroke-dashoffset: 51;" />
-            <circle class="control-hand-cap svg-entrance-scale delay-5" cx="310" cy="220" r="6" />
-            <text class="control-center-text svg-entrance-fade delay-6" x="310" y="250">CLOCK</text>
-            <text class="control-center-sub svg-entrance-fade delay-7" x="310" y="270">RITMO</text>
-          </svg>
+        <div class="band-stage control-demo entrance scale delay-4" aria-hidden="true">
+          <svg class="control-svg" viewBox="0 0 620 400" role="img" aria-label="Clock central coordenando os sinais"><circle class="control-orbit-svg" cx="310" cy="200" r="118" /><circle class="control-orbit-svg inner" cx="310" cy="200" r="86" /><path class="control-track" d="M310 128 L310 78" /><path class="control-track" d="M392 200 L462 200" /><path class="control-track" d="M310 272 L310 322" /><path class="control-track ruby" d="M228 200 L158 200" /><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" repeatCount="indefinite" path="M310,128 L310,78" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-1.3s" repeatCount="indefinite" path="M462,200 L392,200" /></circle><circle class="signal-mover" r="6" fill="#65d8f2"><animateMotion dur="2.6s" begin="-2s" repeatCount="indefinite" path="M310,322 L310,272" /></circle><circle class="signal-mover" r="6" fill="#f05b7c"><animateMotion dur="2.6s" begin="-.65s" repeatCount="indefinite" path="M158,200 L228,200" /></circle><g class="control-node hotspot" data-key="rw" tabindex="0"><rect x="215" y="14" width="190" height="56" rx="6" /><text x="310" y="38">READ / WRITE</text><text class="sub" x="310" y="58">TIPO DE OPERACAO</text></g><g class="control-node irq hotspot" data-key="irq" tabindex="0"><rect x="472" y="172" width="132" height="56" rx="6" /><text x="538" y="196">IRQ</text><text class="sub" x="538" y="216">INTERRUPCAO</text></g><g class="control-node hotspot" data-key="grant" tabindex="0"><rect x="215" y="330" width="190" height="56" rx="6" /><text x="310" y="354">BUS GRANT</text><text class="sub" x="310" y="374">ACESSO CONCEDIDO</text></g><g class="control-node hotspot" data-key="req" tabindex="0"><rect x="16" y="172" width="132" height="56" rx="6" /><text x="82" y="196">BUS REQ</text><text class="sub" x="82" y="216">SOLICITACAO</text></g><circle class="control-center-disc" cx="310" cy="200" r="62" /><line class="control-hand" x1="310" y1="200" x2="310" y2="156" /><circle class="control-hand-cap" cx="310" cy="200" r="6" /><text class="control-center-text hotspot" data-key="clk" tabindex="0" x="310" y="228">CLOCK</text><text class="control-center-sub" x="310" y="248">RITMO</text></svg>
         </div>
       </div>
+      <aside class="inspector" id="insp-control" aria-live="polite"><button class="inspector-close" aria-label="Fechar">×</button><div class="inspector-kicker">Controle</div><h4>Sinal</h4><p>Escolha um bloco do diagrama.</p><div class="inspector-meta">clock · arbitragem</div></aside>
     </div>
     <div class="bottomline"><span>Ordem · ritmo · arbitragem</span><span>Controle</span></div>
   </section>
@@ -1038,27 +1033,28 @@
       <div class="race-wrap">
         <div class="race-head">
           <div>
-            <div class="eyebrow entrance fade-up delay-1">Clique em uma pista para isolar</div>
+            
             <h2 style="margin-top:12px;" class="entrance fade-up delay-2">Curto e rápido <span class="accent-cyan">vs</span> longo e expansível</h2>
           </div>
           <div class="race-score entrance scale delay-3"><span>VELOCIDADE</span><strong>INT 10 x 2 EXT</strong></div>
         </div>
         <div class="race-grid focus-group entrance scale delay-3">
-          <button class="race-lane focusable is-focused" data-focus="int" aria-label="Focar barramento interno">
+          <button class="race-lane focusable is-focused hotspot" data-key="int" aria-label="Focar barramento interno">
             <span class="race-tag cyan">INTERNO</span>
             <span class="race-track"><i class="race-car cyan c1"></i><i class="race-car cyan c2"></i></span>
             <span class="race-meta"><b>FSB · QPI/UPI · Infinity Fabric</b><i>mm de cobre · TB/s · núcleo ↔ cache</i></span>
           </button>
-          <button class="race-lane focusable" data-focus="ext" aria-label="Focar barramento externo">
+          <button class="race-lane focusable hotspot" data-key="ext" aria-label="Focar barramento externo">
             <span class="race-tag ruby">EXTERNO</span>
             <span class="race-track"><i class="race-car ruby c1"></i><i class="race-car ruby c2"></i></span>
             <span class="race-meta"><b>PCIe 5.0 · USB4 · NVMe</b><i>cm de trilha · GB/s · placa-mãe ↔ mundo</i></span>
           </button>
         </div>
-        <div class="focus-hint entrance fade delay-4">Toque nas pistas: interno desfoca o externo e vice-versa.</div>
+        
       </div>
     </div>
-    <div class="bottomline"><span>Clique em uma pista para focar</span><span>Interno x externo</span></div>
+          <aside class="inspector" id="insp-race" aria-live="polite"><button class="inspector-close" aria-label="Fechar">X</button><div class="inspector-kicker">Interno x externo</div><h4>Pistas</h4><p>Escolha uma pista.</p><div class="inspector-meta">curto x expansivel</div></aside>
+    <div class="bottomline"><span>Nucleo x mundo</span><span>Interno x externo</span></div>
   </section>
 
   <section class="slide" data-theme="dark" data-transition="zoom" aria-label="Síntese">
@@ -1073,17 +1069,18 @@
       <div class="section-page entrance fade-up delay-1">08 / 10</div>
     </div>
     <div class="content">
-      <div class="summary-wrap">
+      <div class="duo-stack summary-wrap">
         <div class="summary-copy">
           <div class="eyebrow entrance fade-up delay-1">O sistema inteiro em movimento</div>
           <h2 style="margin-top:18px;" class="entrance fade-up delay-2">Conectar é <span class="accent-cyan">comunicar</span></h2>
           <p class="entrance fade delay-3">Dados + endereços + controle.</p>
         </div>
         <div class="convergence entrance scale delay-3" aria-hidden="true">
-          <svg class="summary-svg" viewBox="0 0 600 400" role="img" aria-label="Tres vias convergindo no barramento"><path class="summary-wire" d="M168 72 C280 72 330 165 448 196" /><path class="summary-wire silver" d="M168 200 L448 200" /><path class="summary-wire ruby" d="M168 328 C280 328 330 235 448 204" /><circle class="summary-mover" r="7" fill="#65d8f2"><animateMotion dur="3.5s" repeatCount="indefinite" path="M168,72 C280,72 330,165 448,196" /></circle><circle class="summary-mover" r="7" fill="#b5b8b6"><animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite" path="M168,200 L448,200" /></circle><circle class="summary-mover" r="7" fill="#f05b7c"><animateMotion dur="3.8s" begin="-2s" repeatCount="indefinite" path="M168,328 C280,328 330,235 448,204" /></circle><g class="summary-label cyan" transform="translate(36 48)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">DADOS</text></g><g class="summary-label" transform="translate(36 176)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">ENDERECOS</text></g><g class="summary-label ruby" transform="translate(36 304)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">CONTROLE</text></g><circle class="summary-hub-ring" cx="480" cy="200" r="86" /><circle class="summary-hub-ring" cx="480" cy="200" r="64" /><circle class="summary-hub" cx="480" cy="200" r="44" /><text class="summary-hub-text" x="480" y="207">BUS</text></svg>
+          <svg class="summary-svg" viewBox="0 0 600 400" role="img" aria-label="Tres vias convergindo no barramento"><path class="summary-wire" d="M168 72 C280 72 330 165 448 196" /><path class="summary-wire silver" d="M168 200 L448 200" /><path class="summary-wire ruby" d="M168 328 C280 328 330 235 448 204" /><circle class="summary-mover" r="7" fill="#65d8f2"><animateMotion dur="3.5s" repeatCount="indefinite" path="M168,72 C280,72 330,165 448,196" /></circle><circle class="summary-mover" r="7" fill="#b5b8b6"><animateMotion dur="4.2s" begin="-1.4s" repeatCount="indefinite" path="M168,200 L448,200" /></circle><circle class="summary-mover" r="7" fill="#f05b7c"><animateMotion dur="3.8s" begin="-2s" repeatCount="indefinite" path="M168,328 C280,328 330,235 448,204" /></circle><g class="summary-label cyan hotspot" data-key="dados" tabindex="0" transform="translate(36 48)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">DADOS</text></g><g class="summary-label hotspot" data-key="ends" tabindex="0" transform="translate(36 176)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">ENDERECOS</text></g><g class="summary-label ruby hotspot" data-key="ctrl" tabindex="0" transform="translate(36 304)"><rect width="128" height="48" rx="5" /><text x="64" y="24" text-anchor="middle">CONTROLE</text></g><circle class="summary-hub-ring" cx="480" cy="200" r="86" /><circle class="summary-hub-ring" cx="480" cy="200" r="64" /><circle class="summary-hub hotspot" data-key="bus" tabindex="0" cx="480" cy="200" r="44" /><text class="summary-hub-text" x="480" y="207">BUS</text></svg>
         </div>
       </div>
     </div>
+      <aside class="inspector" id="insp-sum" aria-live="polite"><button class="inspector-close" aria-label="Fechar">X</button><div class="inspector-kicker">Sintese</div><h4>Convergencia</h4><p>Escolha uma via ou o hub.</p><div class="inspector-meta">dados + enderecos + controle</div></aside>
     <div class="bottomline"><span>CPU · memória · periféricos</span><span>08 / 10</span></div>
   </section>
 
@@ -1091,20 +1088,20 @@
     <div class="scene" aria-hidden="true"><div class="depth-plane"></div><div class="depth-haze"></div><div class="frame-line"></div></div>
     <div class="topline"><div class="section-code entrance fade-up">Glossário essencial</div><div class="section-page entrance fade-up delay-1">09 / 10</div></div>
     <div class="content"><div style="width:100%">
-      <div class="gloss-hero"><div><div class="eyebrow entrance fade-up delay-1">Toque em um termo para focar</div>
+      <div class="gloss-hero"><div>
       <h2 style="margin-top:12px;" class="entrance fade-up delay-2">Fale como um <span class="accent-cyan">engenheiro</span></h2></div>
       <span class="chip entrance scale delay-3">6 termos-chave</span></div>
       <div class="gloss-grid focus-group entrance scale delay-3">
-        <button class="gloss-card focusable" data-focus="g1"><span>BUS</span><b>Barramento</b><p>Via compartilhada que transporta dados, endereços e controle.</p></button>
-        <button class="gloss-card focusable" data-focus="g2"><span>HZ</span><b>Clock</b><p>Metrônomo do sistema: cada pulso autoriza uma transferência.</p></button>
-        <button class="gloss-card focusable" data-focus="g3"><span>BIT</span><b>Largura</b><p>Bits por ciclo. 64 bits = 8 bytes de uma vez.</p></button>
-        <button class="gloss-card focusable" data-focus="g4"><span>IRQ</span><b>Interrupção</b><p>Periférico pede atenção urgente da CPU.</p></button>
-        <button class="gloss-card focusable" data-focus="g5"><span>PCIe</span><b>Externo rápido</b><p>Liga GPU e SSD NVMe à placa-mãe em GB/s.</p></button>
-        <button class="gloss-card focusable" data-focus="g6"><span>SoC</span><b>Interno total</b><p>Barramentos curtíssimos dentro do chip, em TB/s.</p></button>
+        <button class="gloss-card focusable" data-key="bus"><span>BUS</span><b>Barramento</b><p>Via compartilhada que transporta dados, endereços e controle.</p></button>
+        <button class="gloss-card focusable" data-key="clk"><span>HZ</span><b>Clock</b><p>Metrônomo do sistema: cada pulso autoriza uma transferência.</p></button>
+        <button class="gloss-card focusable" data-key="b64"><span>BIT</span><b>Largura</b><p>Bits por ciclo. 64 bits = 8 bytes de uma vez.</p></button>
+        <button class="gloss-card focusable" data-key="irq"><span>IRQ</span><b>Interrupção</b><p>Periférico pede atenção urgente da CPU.</p></button>
+        <button class="gloss-card focusable" data-key="pcie"><span>PCIe</span><b>Externo rápido</b><p>Liga GPU e SSD NVMe à placa-mãe em GB/s.</p></button>
+        <button class="gloss-card focusable" data-key="soc"><span>SoC</span><b>Interno total</b><p>Barramentos curtíssimos dentro do chip, em TB/s.</p></button>
       </div>
-      <div class="focus-hint entrance fade delay-4">Clique de novo para soltar o foco.</div>
+      
     </div></div>
-    <div class="bottomline"><span>Clique para focar · toque de novo para soltar</span><span>Glossário</span></div>
+    <div class="bottomline"><span></span><span>Glossário</span></div>
   </section>
 
   <section class="slide fim-slide" data-theme="dark" data-transition="zoom" aria-label="Fim">
@@ -1154,6 +1151,68 @@
   }
   document.getElementById('deck-prev').addEventListener('click', ev => { ev.stopPropagation(); showSlide(current-1); });
   document.getElementById('deck-next').addEventListener('click', ev => { ev.stopPropagation(); showSlide(current+1); });
+  // ===== INSPECTOR CONTENT (concept shown beside, over blurred rest) =====
+  const CONCEPTS = {
+    cpu: ["CPU", "Origem de tudo.", "Emite dados e enderecos; obedece ao clock. Sem ela, o barramento fica mudo.", "gera · pede · recebe"],
+    mem: ["Memoria", "Destino que responde.", "Guarda bytes enderecaveis; devolve o dado pedido no pulso certo.", "le · escreve · mantem"],
+    io: ["I/O", "Mundo la fora.", "Teclado, SSD, GPU: falam pelo barramento externo, mais longo e variado.", "perifericos · expansao"],
+    dados: ["Dados", "O que viaja.", "Vao e voltam entre CPU e memoria. Largura (8-64 bits) define a vazao.", "bidirecional · bits/ciclo"],
+    ends: ["Enderecos", "Onde.", "Apontam a posicao acessada. 32 bits alcançam 4 GiB; vão só num sentido.", "unidirecional · 2^n"],
+    ctrl: ["Controle", "Quando e como.", "READ, WRITE, IRQ e CLK coordenam quem fala, quando e por quanto tempo.", "ritmo · arbitragem"],
+    addr: ["Endereco 0x3F2A", "Exemplo real.", "Cada pulso seleciona UMA celula do mapa; as demais ignoram.", "seleciona · isola"],
+    rw: ["READ / WRITE", "Tipo de operação.", "Leitura puxa o dado; escrita empurra. O controle anuncia antes.", "ler x escrever"],
+    irq: ["IRQ", "Interrupção.", "Periferico interrompe a CPU: 'me atende agora'. Prioridade decide.", "urgente · prioridade"],
+    grant: ["BUS GRANT", "Acesso concedido.", "Arbitro libera o barramento para UM dono por vez. Sem ele, colisao.", "arbitragem · dono unico"],
+    req: ["BUS REQ", "Solicitação.", "Dispositivo pede a vez. Quem pede, espera o GRANT acender.", "pede · espera"],
+    clk: ["CLOCK", "Ritmo.", "Metronomo do sistema: cada borda autoriza uma transferencia. Tudo dança junto.", "pulso · sincronia"],
+    b64: ["64 bits", "8 bytes por ciclo.", "O dobro de 32 bits por pulso. Largura e vazao em estado puro.", "8 B · vazao max"],
+    b32: ["32 bits", "4 bytes por ciclo.", "Padrao classico; ainda endereça 4 GiB sozinho.", "4 B · classico"],
+    b16: ["16 bits", "2 bytes por ciclo.", "Era de ouro dos consoles; metade da pista, metade da vazao.", "2 B · retrô"],
+    b8: ["8 bits", "1 byte por ciclo.", "Um caractere por pulso. Simples, lento, didatico.", "1 B · base"],
+    int: ["Interno", "Curto e rapido.", "Trilhas de milimetros dentro do chip: TB/s entre nucleo e cache.", "mm · TB/s"],
+    ext: ["Externo", "Longo e expansivel.", "Centimetros pela placa-mae: PCIe, USB, NVMe em GB/s para o mundo.", "cm · GB/s"],
+    bus: ["BUS", "Via compartilhada.", "Um meio, tres trafegos: dados, endereços e controle no mesmo ritmo.", "compartilha · ordena"],
+    pcie: ["PCIe", "Externo rapido.", "Liga GPU e SSD NVMe: pistas seriais rapidissimas em GB/s.", "gpu · nvme"],
+    soc: ["SoC", "Interno total.", "Tudo dentro do chip: barramentos curtissimos em TB/s.", "chip · integração"]
+  };
+  function openInspector(slide, key) {
+    const panel = slide.querySelector(".inspector");
+    if (!panel || !CONCEPTS[key]) return;
+    const [h, p1, p2, meta] = CONCEPTS[key];
+    panel.querySelector("h4").textContent = h;
+    const ps = panel.querySelectorAll("p");
+    if (ps[0]) ps[0].textContent = p1 + " " + p2;
+    const m = panel.querySelector(".inspector-meta");
+    if (m) m.textContent = meta;
+    panel.classList.add("show");
+  }
+  function closeInspectors(slide) {
+    slide.querySelectorAll(".inspector").forEach(x => x.classList.remove("show"));
+    const g = slide.querySelector(".focus-group");
+    if (g) g.classList.remove("has-focus");
+    slide.querySelectorAll(".is-focused").forEach(x => x.classList.remove("is-focused"));
+  }
+  document.querySelectorAll(".slide").forEach(slide => {
+    const group = slide.querySelector(".focus-group");
+    slide.addEventListener("click", ev => {
+      if (ev.target.closest(".inspector-close")) { closeInspectors(slide); return; }
+      const hot = ev.target.closest(".hotspot");
+      if (!hot || !group || !group.contains(hot)) {
+        if (!ev.target.closest(".inspector")) closeInspectors(slide);
+        return;
+      }
+      ev.stopPropagation();
+      const was = hot.classList.contains("is-focused");
+      group.querySelectorAll(".is-focused").forEach(x => x.classList.remove("is-focused"));
+      slide.querySelectorAll(".hotspot.is-focused").forEach(x => { if (!group.contains(x)) x.classList.remove("is-focused"); });
+      if (was) { closeInspectors(slide); }
+      else {
+        group.classList.add("has-focus");
+        hot.classList.add("is-focused");
+        openInspector(slide, hot.dataset.key);
+      }
+    });
+  });
   // varied compositions: slide 3 cards + slide 7 lanes get focusable behavior (before listeners!)
   document.querySelectorAll('.types-grid').forEach(g => g.classList.add('focus-group'));
   document.querySelectorAll('.type-card').forEach(c => { c.classList.add('focusable'); c.setAttribute('tabindex','0'); });
