@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>Barramentos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,6 +41,19 @@
     overflow: hidden;
     background: var(--black);
     color: var(--ink);
+  }
+
+  .deck-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--cyan-light) 60%, var(--ruby));
+    box-shadow: 0 0 12px rgba(0, 169, 214, .85);
+    z-index: 50;
+    transition: width 380ms cubic-bezier(.16, 1, .3, 1);
+    pointer-events: none;
   }
 
   .slide {
@@ -716,8 +729,58 @@
   @media (max-width: 860px) { .tri-lanes, .milestone-row { grid-template-columns:1fr 1fr; } }
   @media (max-width: 560px) { .tri-lanes, .milestone-row { grid-template-columns:1fr; } }
 
-  .fim-slide .fim-content { width:100%; height:100%; display:grid; place-items:center; text-align:center; }
-  .fim-slide .fim-big { font-weight:700; letter-spacing:-.04em; font-size:clamp(90px,18vw,260px); line-height:.9; color:var(--fg); }
+  .fim-slide .fim-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 3.2vh, 36px);
+    text-align: center;
+    padding-bottom: 40px;
+  }
+  .fim-slide .fim-big {
+    font-weight: 700;
+    letter-spacing: -.04em;
+    font-size: clamp(64px, 12vw, 150px);
+    line-height: .88;
+    color: var(--fg);
+  }
+  .fim-circuit {
+    width: min(840px, 92vw);
+    max-height: clamp(200px, 36vh, 320px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(0, 169, 214, .08), transparent 70%),
+      linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .005));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, .08),
+      0 24px 64px rgba(0, 0, 0, .45),
+      0 0 40px rgba(0, 169, 214, .12);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .fim-circuit svg {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    display: block;
+    overflow: visible;
+  }
+  .fim-wire-glow {
+    filter: drop-shadow(0 0 6px rgba(0, 169, 214, .6));
+  }
+  .fim-wire-ruby-glow {
+    filter: drop-shadow(0 0 6px rgba(189, 23, 70, .6));
+  }
+  .fim-pulse-dot {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
   /* ===== RACE SLIDE 7 + GLOSSARY ===== */
   .race-wrap { width:100%; max-width:100%; min-width:0; display:grid; gap:16px; overflow:hidden; align-content:center; }
   .race-head { display:flex; justify-content:space-between; align-items:end; gap:18px; flex-wrap:wrap; }
@@ -777,30 +840,51 @@
   }
 
   @media (max-width: 860px) {
-    .slide { padding: 20px 18px 92px; grid-template-rows: auto minmax(0,1fr) auto; }
-    .content { overflow-y: auto; }
+    .slide {
+      padding: clamp(14px, 2.5vw, 20px) clamp(12px, 3vw, 18px) calc(84px + env(safe-area-inset-bottom, 0px));
+      grid-template-rows: auto minmax(0,1fr) auto;
+    }
+    .content {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      align-items: flex-start;
+      padding-bottom: 12px;
+    }
     .type-card, .race-lane, .gloss-card { height: auto; min-height: 0; }
-    .system-board, .control-demo, .convergence { height: auto; min-height: 240px; }
-    h1 { font-size: clamp(44px, 13vw, 72px); }
-    h2 { font-size: clamp(28px, 7.4vw, 44px); }
-    p { font-size: clamp(15px, 4vw, 19px); }
-    .split-cover, .concept-grid, .data-wrap, .address-wrap, .control-wrap, .summary-wrap { grid-template-columns: 1fr; gap: 18px; }
-    .content { align-items: flex-start; overflow-y: auto; padding-bottom: 8px; }
-    .system-board {
-    padding: 10px; min-height: 240px; }
-    .system-board svg, .road-svg, .data-svg, .address-svg, .control-svg, .summary-svg { max-height: 34vh; width: 100%; }
-    .types-grid { grid-template-columns: 1fr; }
-    .type-card { min-height: 0; padding: 18px; }
-    .type-visual { height: 92px; }
+    .system-board, .control-demo, .convergence { height: auto; min-height: 220px; }
+    h1 { font-size: clamp(38px, 11vw, 64px); }
+    h2 { font-size: clamp(24px, 6.5vw, 38px); }
+    p { font-size: clamp(14px, 3.8vw, 18px); }
+    .split-cover, .concept-grid, .data-wrap, .address-wrap, .control-wrap, .summary-wrap { grid-template-columns: 1fr; gap: 16px; }
+    .system-board { padding: 8px; min-height: 210px; }
+    .system-board svg, .road-svg, .data-svg, .address-svg, .control-svg, .summary-svg { max-height: 30vh; width: 100%; }
+    .types-grid { grid-template-columns: 1fr; gap: 14px; }
+    .type-card { min-height: 0; padding: 16px; }
+    .type-visual { height: 84px; }
     .inside-outside { grid-template-columns: 1fr; min-height: 0; }
-    .system-bridge { min-height: 64px; border-left: 0; border-right: 0; border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); }
+    .system-bridge { min-height: 56px; border-left: 0; border-right: 0; border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); }
     .system-bridge::before { left: 13%; right: 13%; top: auto; bottom: auto; width: auto; height: 4px; background: linear-gradient(90deg, var(--cyan), var(--silver) 50%, var(--ruby)); }
-    .width-readout { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; padding-top: 16px; }
-    .deck-nav { bottom: 12px; }
+    .width-readout { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; padding-top: 14px; }
+    .deck-nav {
+      bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 10px;
+      gap: 8px;
+    }
+    .deck-nav button { width: 34px; height: 34px; font-size: 16px; }
+    .deck-dots { gap: 5px; }
+    .deck-dots button { width: 7px; height: 7px; }
+    .deck-count { font-size: 10px; min-width: 42px; }
+    .fim-circuit {
+      max-height: 28vh;
+      padding: 8px 10px;
+    }
   }
 </style>
 </head>
 <body>
+<div class="deck-progress" id="deck-progress" role="progressbar" aria-label="Progresso da apresentação" aria-valuenow="1" aria-valuemin="1" aria-valuemax="10"></div>
+
 <main class="deck" aria-label="Apresentação sobre barramentos">
   <section class="slide is-active" data-theme="dark" data-transition="rise" aria-label="Capa">
     <div class="scene" aria-hidden="true">
@@ -1129,7 +1213,82 @@
 
   <section class="slide fim-slide" data-theme="dark" data-transition="zoom" aria-label="Fim">
     <div class="scene" aria-hidden="true"><div class="depth-plane"></div><div class="depth-haze"></div><div class="frame-line"></div></div>
-    <div class="content fim-content"><div class="fim-big entrance scale">FIM</div></div>
+    <div class="content fim-content">
+      <div class="fim-big entrance scale">FIM</div>
+      <div class="fim-circuit entrance fade-up delay-2" aria-hidden="true">
+        <svg viewBox="0 0 760 200" role="presentation">
+          <defs>
+            <filter id="fglow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g transform="translate(40, 45)">
+            <rect width="110" height="110" rx="10" fill="#0d1015" stroke="rgba(0,169,214,.6)" stroke-width="2"/>
+            <rect x="14" y="14" width="82" height="36" rx="5" fill="rgba(0,169,214,.12)" stroke="rgba(101,216,242,.3)" stroke-width="1"/>
+            <line x1="24" y1="24" x2="86" y2="24" stroke="rgba(101,216,242,.4)" stroke-width="1" stroke-dasharray="3 3"/>
+            <line x1="24" y1="36" x2="86" y2="36" stroke="rgba(101,216,242,.4)" stroke-width="1" stroke-dasharray="3 3"/>
+            <circle cx="34" cy="68" r="4" fill="#65d8f2"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.2s" repeatCount="indefinite"/></circle>
+            <circle cx="55" cy="68" r="4" fill="#00a9d6"><animate attributeName="opacity" values="1;0.2;1" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle cx="76" cy="68" r="4" fill="#bd1746"><animate attributeName="opacity" values="0.4;1;0.4" dur="2.1s" repeatCount="indefinite"/></circle>
+            <rect x="25" y="86" width="60" height="12" rx="3" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+          </g>
+          <g transform="translate(330, 55)">
+            <rect width="100" height="90" rx="12" fill="#0d1015" stroke="rgba(255,255,255,.3)" stroke-width="1.8"/>
+            <circle cx="50" cy="45" r="22" fill="none" stroke="rgba(0,169,214,.4)" stroke-width="2" stroke-dasharray="4 6">
+              <animateTransform attributeName="transform" type="rotate" from="0 50 45" to="360 50 45" dur="10s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="50" cy="45" r="10" fill="#00a9d6" opacity="0.85">
+              <animate attributeName="r" values="8;11;8" dur="2.4s" repeatCount="indefinite"/>
+            </circle>
+          </g>
+          <g transform="translate(610, 25)">
+            <rect width="110" height="66" rx="8" fill="#0d1015" stroke="rgba(101,216,242,.5)" stroke-width="1.8"/>
+            <rect x="14" y="14" width="22" height="38" rx="3" fill="rgba(0,169,214,.18)" stroke="rgba(0,169,214,.4)" stroke-width="1"/>
+            <rect x="44" y="14" width="22" height="38" rx="3" fill="rgba(0,169,214,.18)" stroke="rgba(0,169,214,.4)" stroke-width="1"/>
+            <rect x="74" y="14" width="22" height="38" rx="3" fill="rgba(0,169,214,.18)" stroke="rgba(0,169,214,.4)" stroke-width="1"/>
+            <line x1="14" y1="33" x2="96" y2="33" stroke="rgba(101,216,242,.6)" stroke-width="1.5" stroke-dasharray="2 4"/>
+          </g>
+          <g transform="translate(610, 110)">
+            <rect width="110" height="60" rx="8" fill="#0d1015" stroke="rgba(189,23,70,.55)" stroke-width="1.8"/>
+            <line x1="22" y1="18" x2="88" y2="18" stroke="rgba(240,91,124,.5)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="22" y1="30" x2="88" y2="30" stroke="rgba(240,91,124,.35)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="22" y1="42" x2="88" y2="42" stroke="rgba(240,91,124,.5)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="94" cy="30" r="3.5" fill="#f05b7c"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.9s" repeatCount="indefinite"/></circle>
+          </g>
+          <g stroke-linecap="round">
+            <path d="M 150 75 L 330 75 M 430 75 L 610 45" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="4"/>
+            <path d="M 150 75 L 330 75 M 430 75 L 610 45" fill="none" stroke="#65d8f2" stroke-width="2" stroke-dasharray="8 20" class="fim-wire-glow">
+              <animate attributeName="stroke-dashoffset" values="0;-56" dur="2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 150 95 L 330 95 M 430 95 L 610 70" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="4"/>
+            <path d="M 150 95 L 330 95 M 430 95 L 610 70" fill="none" stroke="#00a9d6" stroke-width="2" stroke-dasharray="6 16" class="fim-wire-glow">
+              <animate attributeName="stroke-dashoffset" values="0;-44" dur="2.4s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 150 115 L 330 115 M 430 115 L 610 130" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="4"/>
+            <path d="M 150 115 L 330 115 M 430 115 L 610 130" fill="none" stroke="#a9aca9" stroke-width="1.8" stroke-dasharray="4 12">
+              <animate attributeName="stroke-dashoffset" values="0;-32" dur="1.6s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 610 150 L 430 130 M 330 130 L 150 130" fill="none" stroke="rgba(189,23,70,.2)" stroke-width="3"/>
+            <path d="M 610 150 L 430 130 M 330 130 L 150 130" fill="none" stroke="#f05b7c" stroke-width="2" stroke-dasharray="6 22" class="fim-wire-ruby-glow">
+              <animate attributeName="stroke-dashoffset" values="-56;0" dur="2.8s" repeatCount="indefinite"/>
+            </path>
+          </g>
+          <circle r="5" fill="#65d8f2" class="fim-pulse-dot" filter="url(#fglow)">
+            <animateMotion dur="2.6s" repeatCount="indefinite" path="M 150 75 L 330 75 L 430 75 L 610 45"/>
+          </circle>
+          <circle r="4.5" fill="#00a9d6" class="fim-pulse-dot" filter="url(#fglow)">
+            <animateMotion dur="2.9s" begin="-1.4s" repeatCount="indefinite" path="M 610 45 L 430 75 L 330 75 L 150 75"/>
+          </circle>
+          <circle r="4" fill="#ffffff" class="fim-pulse-dot" filter="url(#fglow)">
+            <animateMotion dur="2.2s" begin="-0.7s" repeatCount="indefinite" path="M 150 95 L 330 95 L 430 95 L 610 70"/>
+          </circle>
+          <circle r="4.5" fill="#f05b7c" class="fim-pulse-dot" filter="url(#fglow)">
+            <animateMotion dur="3.1s" begin="-0.5s" repeatCount="indefinite" path="M 610 150 L 430 130 L 330 130 L 150 130"/>
+          </circle>
+        </svg>
+      </div>
+    </div>
   </section>
 </main>
 <nav class="deck-nav" aria-label="Navegação dos slides">
@@ -1159,8 +1318,14 @@
 
   const dots = document.getElementById('deck-dots');
   const count = document.getElementById('deck-count');
+  const progressBar = document.getElementById('deck-progress');
   function pad(n){ return String(n).padStart(2,'0'); }
   function renderNav(){
+    if (progressBar) {
+      const pct = slides.length > 1 ? ((current) / (slides.length - 1)) * 100 : 100;
+      progressBar.style.width = pct + '%';
+      progressBar.setAttribute('aria-valuenow', current + 1);
+    }
     if(!dots) return;
     dots.innerHTML = '';
     slides.forEach((_, i) => {
@@ -1286,12 +1451,19 @@
     if (event.key === 'End') showSlide(slides.length - 1);
   });
 
-  let touchX = 0;
-  document.addEventListener('touchstart', event => { touchX = event.changedTouches[0].clientX; }, { passive: true });
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener('touchstart', event => {
+    touchStartX = event.changedTouches[0].clientX;
+    touchStartY = event.changedTouches[0].clientY;
+  }, { passive: true });
   document.addEventListener('touchend', event => {
-    const delta = event.changedTouches[0].clientX - touchX;
-    if (Math.abs(delta) < 45) return;
-    showSlide(current + (delta < 0 ? 1 : -1));
+    const deltaX = event.changedTouches[0].clientX - touchStartX;
+    const deltaY = event.changedTouches[0].clientY - touchStartY;
+    // Se o movimento for mais vertical que horizontal, respeite o scroll do conteúdo
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+    if (Math.abs(deltaX) < 40) return;
+    showSlide(current + (deltaX < 0 ? 1 : -1));
   }, { passive: true });
 
   addEventListener('hashchange', () => showSlide(fromHash()));
@@ -1299,11 +1471,12 @@
   slides.forEach((slide, index) => slide.classList.toggle('is-active', index === current));
   renderNav();
 
-  // Address counter animation for slide 5
+  // Address counter animation for slide 5 (otimizado para rodar só quando o slide está ativo)
   const addrCounter = document.getElementById('addr-counter');
   if (addrCounter) {
     let val = 0;
     setInterval(() => {
+      if (current !== 4) return;
       val = (val + 0x1000) & 0xFFFF;
       addrCounter.textContent = '0x' + val.toString(16).toUpperCase().padStart(4, '0');
     }, 200);
